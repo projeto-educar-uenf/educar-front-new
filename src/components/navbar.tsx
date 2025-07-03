@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
+import { Sun } from "lucide-react"
 
 export function Navbar() {
   return (
@@ -10,9 +11,12 @@ export function Navbar() {
             <span className="text-2xl font-bold">eduCar</span>
           </Link>
         </div>
-        <div className="flex flex-1 items-center justify-end space-x-4">
+        <div className="ml-auto flex items-center gap-3">
+          <Button variant="outline" size="icon" disabled>
+            <Sun className="h-[1.2rem] w-[1.2rem]" />
+          </Button>
           <Link to="/login">
-            <Button variant="outline">Login</Button>
+            <Button>Login</Button>
           </Link>
         </div>
       </div>

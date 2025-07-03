@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom"
 import { Mail, Phone, MapPin } from "lucide-react"
 
 export function Footer() {
@@ -8,7 +7,7 @@ export function Footer() {
         <div className="flex items-center mb-6 md:mb-0">
           <div className="flex flex-col md:flex-row items-center">
             <img
-              src="/uenf-logo.png"
+              src="/images/logo-preta.webp"
               alt="UENF Logo"
               width={300}
               height={120}
@@ -19,9 +18,9 @@ export function Footer() {
         <div className="flex flex-col space-y-2 text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start">
             <Mail className="h-4 w-4 mr-2" />
-            <Link to="mailto:uenf@uenf.br" className="text-sm underline">
+            <a href="mailto:uenf@uenf.br" className="text-sm underline">
               uenf@uenf.br
-            </Link>
+            </a>
           </div>
           <div className="flex items-center justify-center md:justify-start">
             <Phone className="h-4 w-4 mr-2" />
@@ -33,6 +32,11 @@ export function Footer() {
               Av. Alberto Lamego, 2000 - Parque Califórnia Campos dos Goytacazes - RJ CEP: 28013-602
             </span>
           </div>
+        </div>
+      </div>
+      <div className="border-t py-4">
+        <div className="container text-center text-sm">
+          Todos os direitos reservados a UENF
         </div>
       </div>
     </footer>
