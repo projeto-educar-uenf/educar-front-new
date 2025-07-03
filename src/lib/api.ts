@@ -1,4 +1,4 @@
-import { Document, DocumentsResponse, DocumentFilters } from './types';
+import { Document, DocumentsResponse, DocumentFilters, User, UsersResponse, AdminStats, UpdateUserRequest, UpdateDocumentRequest } from './types';
 
 // Dados mockados para simular uma base de documentos
 const mockDocuments: Document[] = [
@@ -138,6 +138,55 @@ const mockDocuments: Document[] = [
   }
 ];
 
+// Dados mockados de usuários
+const mockUsers: User[] = [
+  {
+    id: 'user1',
+    name: 'Dr. João Silva',
+    email: 'joao.silva@uenf.br',
+    role: 'ADMIN',
+    documentCount: 12,
+    createdAt: '2023-01-15T10:30:00Z',
+    image: '/placeholder-user.jpg'
+  },
+  {
+    id: 'user2',
+    name: 'Dra. Ana Costa',
+    email: 'ana.costa@uenf.br',
+    role: 'USER',
+    documentCount: 8,
+    createdAt: '2023-02-20T14:15:00Z',
+    image: '/placeholder-user.jpg'
+  },
+  {
+    id: 'user3',
+    name: 'Dr. Pedro Ferreira',
+    email: 'pedro.ferreira@uenf.br',
+    role: 'USER',
+    documentCount: 5,
+    createdAt: '2023-03-10T09:45:00Z',
+    image: '/placeholder-user.jpg'
+  },
+  {
+    id: 'user4',
+    name: 'Dra. Maria Santos',
+    email: 'maria.santos@uenf.br',
+    role: 'USER',
+    documentCount: 15,
+    createdAt: '2023-01-25T16:20:00Z',
+    image: '/placeholder-user.jpg'
+  },
+  {
+    id: 'user5',
+    name: 'Dr. Carlos Oliveira',
+    email: 'carlos.oliveira@uenf.br',
+    role: 'USER',
+    documentCount: 7,
+    createdAt: '2023-04-05T11:10:00Z',
+    image: '/placeholder-user.jpg'
+  }
+];
+
 // Simula um delay de rede
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -257,4 +306,126 @@ export function getFilterStats() {
     researchAreas: Object.entries(researchAreaCounts).map(([name, count]) => ({ name, count })),
     totalDocuments: mockDocuments.length
   }
+}
+
+// ADMIN APIs - Gestão de usuários
+
+// Função para buscar usuários (admin)
+export async function fetchUsers(searchQuery = '', page = 1, limit = 10): Promise<UsersResponse> {
+  await delay(300);
+  
+  let filteredUsers = mockUsers;
+  
+  // Filtrar por busca
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filteredUsers = filteredUsers.filter(user =>
+      user.name.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query)
+    );
+  }
+  
+  const total = filteredUsers.length;
+  const totalPages = Math.ceil(total / limit);
+  const startIndex = (page - 1) * limit;
+  const endIndex = startIndex + limit;
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex);
+
+  return {
+    users: paginatedUsers,
+    pagination: {
+      page,
+      pages: totalPages,
+      total,
+      limit
+    }
+  };
+}
+
+// Função para atualizar permissões de usuário
+export async function updateUser(userId: string, updates: UpdateUserRequest): Promise<User> {
+  await delay(200);
+  
+  const userIndex = mockUsers.findIndex(user => user.id === userId);
+  if (userIndex === -1) {
+    throw new Error('Usuário não encontrado');
+  }
+  
+  // Atualizar o usuário
+  mockUsers[userIndex] = {
+    ...mockUsers[userIndex],
+    ...updates
+  };
+  
+  return mockUsers[userIndex];
+}
+
+// ADMIN APIs - Gestão de documentos
+
+// Função para atualizar documento (admin)
+export async function updateDocument(documentId: string, updates: UpdateDocumentRequest): Promise<Document> {
+  await delay(200);
+  
+  const docIndex = mockDocuments.findIndex(doc => doc.id === documentId);
+  if (docIndex === -1) {
+    throw new Error('Documento não encontrado');
+  }
+  
+  // Atualizar o documento
+  mockDocuments[docIndex] = {
+    ...mockDocuments[docIndex],
+    ...updates,
+    updatedAt: new Date().toISOString()
+  };
+  
+  return mockDocuments[docIndex];
+}
+
+// Função para deletar documento (admin)
+export async function deleteDocument(documentId: string): Promise<void> {
+  await delay(200);
+  
+  const docIndex = mockDocuments.findIndex(doc => doc.id === documentId);
+  if (docIndex === -1) {
+    throw new Error('Documento não encontrado');
+  }
+  
+  // Remover o documento
+  mockDocuments.splice(docIndex, 1);
+  
+  // Atualizar contagem de documentos dos usuários
+  mockUsers.forEach(user => {
+    if (user.id === mockDocuments[docIndex]?.createdBy.id) {
+      user.documentCount = Math.max(0, user.documentCount - 1);
+    }
+  });
+}
+
+// Função para obter estatísticas administrativas
+export async function getAdminStats(): Promise<AdminStats> {
+  await delay(150);
+  
+  const totalUsers = mockUsers.length;
+  const totalAdmins = mockUsers.filter(user => user.role === 'ADMIN').length;
+  const activeUsers = mockUsers.length; // Todos são considerados ativos no mock
+  const totalDocuments = mockDocuments.length;
+  
+  // Documentos do último mês (simulado)
+  const lastMonth = new Date();
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  const documentsThisMonth = mockDocuments.filter(doc => 
+    new Date(doc.createdAt) > lastMonth
+  ).length;
+  
+  // Total de downloads (somando todos os documentos)
+  const totalDownloads = mockDocuments.reduce((sum, doc) => sum + doc.downloadCount, 0);
+  
+  return {
+    totalUsers,
+    totalAdmins,
+    activeUsers,
+    totalDocuments,
+    documentsThisMonth,
+    totalDownloads
+  };
 }

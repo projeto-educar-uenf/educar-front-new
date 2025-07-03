@@ -38,3 +38,48 @@ export interface DocumentsResponse {
 export type DocumentFilters = ReturnType<typeof import('../hooks/useFilters').default>[0] & {
   limit?: number;
 }
+
+// Tipos para administração de usuários
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'USER' | 'ADMIN';
+  documentCount: number;
+  createdAt: string;
+  image?: string;
+}
+
+export interface UsersResponse {
+  users: User[];
+  pagination: {
+    page: number;
+    pages: number;
+    total: number;
+    limit: number;
+  };
+}
+
+// Tipos para estatísticas de administração
+export interface AdminStats {
+  totalUsers: number;
+  totalAdmins: number;
+  activeUsers: number;
+  totalDocuments: number;
+  documentsThisMonth: number;
+  totalDownloads: number;
+}
+
+// Tipos para operações CRUD
+export interface UpdateUserRequest {
+  role?: 'USER' | 'ADMIN';
+}
+
+export interface UpdateDocumentRequest {
+  title?: string;
+  description?: string;
+  authors?: string[];
+  documentType?: string;
+  researchArea?: string;
+  keywords?: string[];
+}
