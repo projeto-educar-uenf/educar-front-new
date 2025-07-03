@@ -62,9 +62,9 @@ educar-new/ (Vite + React - DESTINO)
 9. **✅ AUTENTICAÇÃO MOCK IMPLEMENTADA**:
    - AuthProvider customizado com Context API
    - Sistema de login/logout funcional com persistência localStorage
-   - UserNav dropdown com opções de perfil e logout
+   - UserNav dropdown com opções de logout (perfil será integrado com Google)
    - ProtectedRoute component para rotas privadas
-   - Páginas ProfilePage, DocumentosPage e AdminPage criadas
+   - Páginas DocumentosPage e AdminPage criadas
    - Integração completa: login funciona, rotas protegidas, navbar dinâmico
 10. **✅ DOCUMENTOS PAGE FUNCIONAL**:
    - Sistema completo de listagem de documentos com TanStack Query
@@ -147,7 +147,6 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
      <Route path="/" element={<HomePage />} />
      <Route path="/login" element={<LoginPage />} />
      <Route path="/documentos" element={<DocumentosPage />} />
-     <Route path="/perfil" element={<PerfilPage />} />
      <Route path="/admin" element={<AdminPage />} />
    </Routes>
    ```
@@ -161,8 +160,8 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
    - ✅ Páginas individuais de documentos (/documentos/[id]) ✅ MIGRADO
    - ✅ Layout persistente com Navbar ✅ IMPLEMENTADO
    - ✅ **FILTROS AVANÇADOS IMPLEMENTADOS**: Sistema completo de filtros funcionais
-   - 🔄 **PENDENTE**: Perfil page (estrutura básica criada, funcionalidades pendentes)
    - 🔄 **PENDENTE**: Admin page (estrutura básica criada, funcionalidades pendentes)
+   - ⚠️ **PERFIL**: Não será implementado - dados virão da integração com Google OAuth
 
 3. **Substituir APIs Next.js por TanStack Query**:
    ```tsx
@@ -242,26 +241,27 @@ bun run dev  # verificar se ainda funciona
 
 **Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação, Páginas Individuais de Documentos e Filtros Avançados totalmente funcionais**.
 
-## 🎯 **PRÓXIMO PASSO RECOMENDADO: ProfilePage Completa**
+## 🎯 **PRÓXIMO PASSO RECOMENDADO: AdminPage Completa**
 
 ### **Por que esta funcionalidade agora:**
-1. **Funcionalidade essencial de usuário**: Edição de perfil é funcionalidade básica em qualquer sistema
+1. **Funcionalidade crítica do sistema**: Gestão de usuários e documentos é essencial
 2. **Estrutura já existe**: Página básica já criada, só falta implementar funcionalidades
-3. **Não interfere com outras funcionalidades**: Implementação isolada
-4. **Prepara para Admin**: ProfilePage prepara o terreno para funcionalidades administrativas
+3. **Completa o core do sistema**: Com admin funcional, sistema fica completo para uso
+4. **Não há dependência de perfil**: Admin funciona independente da integração Google
 
 ### **Escopo da próxima iteração:**
-- ✅ Formulário de edição de perfil (nome, email, bio, etc.)
-- ✅ Upload de avatar com preview
-- ✅ Validação de formulário
+- ✅ Gestão completa de usuários (listar, editar permissões, desativar)
+- ✅ Gestão completa de documentos (upload, edição, remoção)
+- ✅ Dashboard com estatísticas
+- ✅ Validação de formulários
 - ✅ Estados de loading/success/error
-- ✅ Mock API para atualização de perfil
+- ✅ Mock APIs para operações administrativas
 - ✅ Integração com sistema de autenticação existente
 
 ### **Alternativas para próximas iterações:**
-1. **AdminPage funcional** - Gestão completa de usuários e documentos  
-2. **Sistema de uploads de documentos** - Permitir upload de novos documentos
-3. **Melhorias na DocumentosPage** - Visualização inline, favoritos, etc.
+1. **Sistema de uploads de documentos** - Permitir upload de novos documentos  
+2. **Melhorias na DocumentosPage** - Visualização inline, favoritos, etc.
+3. **Integração Google OAuth** - Substituir sistema mock por autenticação real
 
 ## 🔍 **Descobertas da Migração**
 
@@ -283,9 +283,10 @@ bun run dev  # verificar se ainda funciona
 
 1. ✅ **Theme Provider**: Implementar dark mode funcional ~~(atualmente mockado)~~ **COMPLETO**
 2. ✅ **Context de Autenticação**: Criar sistema de auth mock para substituir NextAuth **COMPLETO**
-3. **Página de Documentos**: Implementar funcionalidades completas com TanStack Query + mocks de API
+3. ✅ **Página de Documentos**: Implementar funcionalidades completas com TanStack Query + mocks de API **COMPLETO**
 4. **Componentes de Gerenciamento**: Migrar DocumentList, DocumentFilters, AddDocumentButton, etc.
 5. **State Management**: APIs mockadas para CRUD de documentos e usuários
+6. **Integração Google OAuth**: Substituir sistema mock quando necessário (perfil virá do Google)
 
 ## 📋 **Checklist de Migração por Página**
 
