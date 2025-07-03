@@ -42,8 +42,15 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
+    <div 
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
+      style={{
+        background: 'linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%)',
+      }}
+    >
+      {/* Modo dark sobrepõe com outro gradiente */}
+      <div className="absolute inset-0 dark:bg-gradient-to-br dark:from-slate-900 dark:via-gray-800 dark:to-slate-700"></div>
+      <Card className="w-full max-w-md relative z-10 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md border shadow-2xl">
         <CardHeader className="space-y-1">
           <div className="flex justify-center mb-4">
             <Link to="/" className="text-2xl font-bold">
