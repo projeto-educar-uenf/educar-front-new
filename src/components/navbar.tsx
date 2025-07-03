@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { Button } from "@/components/ui/button"
-import { Sun } from "lucide-react"
+import { ThemeToggle } from "./theme-toggle"
 
 export function Navbar() {
   return (
@@ -12,9 +12,7 @@ export function Navbar() {
           </Link>
         </div>
         <div className="ml-auto flex items-center gap-3">
-          <Button variant="outline" size="icon" disabled>
-            <Sun className="h-[1.2rem] w-[1.2rem]" />
-          </Button>
+          <ThemeToggle />
           <Link to="/login">
             <Button>Login</Button>
           </Link>

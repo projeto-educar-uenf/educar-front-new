@@ -1,13 +1,37 @@
 import { Mail, Phone, MapPin } from "lucide-react"
+import { useTheme } from "./theme-provider"
+import { useEffect, useState } from "react"
 
 export function Footer() {
+  const { theme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // Evitar hidratação incorreta
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Determinar qual logo usar baseado no tema
+  const getLogoSrc = () => {
+    if (!mounted) return "/images/logo-preta.webp" // fallback
+    
+    if (theme === "dark") {
+      return "/images/logo-branca.webp"
+    } else if (theme === "light") {
+      return "/images/logo-preta.webp"
+    } else { // system
+      const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+      return isDarkMode ? "/images/logo-branca.webp" : "/images/logo-preta.webp"
+    }
+  }
+
   return (
     <footer className="border-t bg-background">
       <div className="container flex flex-col md:flex-row items-center justify-between py-10 md:py-6">
         <div className="flex items-center mb-6 md:mb-0">
           <div className="flex flex-col md:flex-row items-center">
             <img
-              src="/images/logo-preta.webp"
+              src={getLogoSrc()}
               alt="UENF Logo"
               width={300}
               height={120}
