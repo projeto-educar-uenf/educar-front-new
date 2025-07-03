@@ -3,6 +3,8 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { QueryParamProvider } from 'use-query-params'
+import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6'
 import { ThemeProvider } from './components/theme-provider'
 import { AuthProvider } from './components/auth-provider'
 import App from './App.tsx'
@@ -24,8 +26,10 @@ createRoot(document.getElementById('root')!).render(
       <ThemeProvider defaultTheme="system" storageKey="educar-ui-theme">
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <App />
-            <ReactQueryDevtools initialIsOpen={false} />
+            <QueryParamProvider adapter={ReactRouter6Adapter}>
+              <App />
+              <ReactQueryDevtools initialIsOpen={false} />
+            </QueryParamProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </ThemeProvider>

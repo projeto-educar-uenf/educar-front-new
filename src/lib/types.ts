@@ -34,11 +34,7 @@ export interface DocumentsResponse {
   };
 }
 
-export interface DocumentFilters {
-  q?: string;
-  documentType?: string;
-  researchArea?: string;
-  author?: string;
-  page?: number;
+// Tipo baseado no retorno do useFilters hook
+export type DocumentFilters = ReturnType<typeof import('../hooks/useFilters').default>[0] & {
   limit?: number;
 }

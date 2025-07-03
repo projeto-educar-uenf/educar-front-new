@@ -5,8 +5,6 @@ import { useAuth } from "@/components/auth-provider"
 
 export function HomePage() {
   const { isAuthenticated } = useAuth()
-
-  // Redirecionar usuários logados para /documentos
   if (isAuthenticated) {
     return <Navigate to="/documentos" replace />
   }

@@ -142,7 +142,7 @@ const mockDocuments: Document[] = [
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Função para buscar documentos com filtros e paginação
-export async function fetchDocuments(filters: DocumentFilters = {}): Promise<DocumentsResponse> {
+export async function fetchDocuments(filters: DocumentFilters): Promise<DocumentsResponse> {
   await delay(300); // Simula latência da rede
 
   const {
@@ -240,4 +240,21 @@ export async function downloadDocument(id: string): Promise<string> {
 
   // Em uma aplicação real, isso retornaria a URL real ou faria download
   return document.fileUrl;
+}
+
+// Função para obter estatísticas de filtros com contadores
+export function getFilterStats() {
+  const documentTypeCounts: Record<string, number> = {}
+  const researchAreaCounts: Record<string, number> = {}
+  
+  mockDocuments.forEach(doc => {
+    documentTypeCounts[doc.documentType] = (documentTypeCounts[doc.documentType] || 0) + 1
+    researchAreaCounts[doc.researchArea] = (researchAreaCounts[doc.researchArea] || 0) + 1
+  })
+
+  return {
+    documentTypes: Object.entries(documentTypeCounts).map(([name, count]) => ({ name, count })),
+    researchAreas: Object.entries(researchAreaCounts).map(([name, count]) => ({ name, count })),
+    totalDocuments: mockDocuments.length
+  }
 }

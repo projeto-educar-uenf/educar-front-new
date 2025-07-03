@@ -6,7 +6,7 @@ import { X } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const drawerVariants = cva(
-  "fixed inset-y-0 z-50 flex h-[100dvh] flex-col bg-background shadow-lg transition-all duration-300 ease-in-out",
+  "fixed inset-y-0 z-[100] flex h-[100dvh] flex-col bg-background shadow-lg transition-all duration-300 ease-in-out",
   {
     variants: {
       side: {
@@ -33,7 +33,7 @@ const Overlay = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEle
     <div
       ref={ref}
       className={cn(
-        "fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300",
+        "fixed inset-0 z-[90] bg-black/40 backdrop-blur-sm transition-all duration-300 cursor-pointer",
         open ? "opacity-100" : "pointer-events-none opacity-0",
         className,
       )}

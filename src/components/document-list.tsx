@@ -1,32 +1,21 @@
-import { useState } from 'react'
 import { DocumentCard } from './document-card'
 import { Pagination } from './ui/pagination'
-import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { Search, Filter, X, Loader2 } from 'lucide-react'
-import { useDocuments, useDocumentFilters } from '@/hooks/use-documents'
+import { Search, Loader2 } from 'lucide-react'
+import { useDocuments } from '@/hooks/use-documents'
+import useFilters, { RESET_FILTERS } from '@/hooks/useFilters'
 
 export function DocumentList() {
-  const {
-    searchQuery,
-    setSearchQuery,
-    updatePage,
-    clearFilters,
-    currentFilters
-  } = useDocumentFilters()
-
-  const [showFilters, setShowFilters] = useState(false)
-  
-  // Buscar documentos com os filtros atuais
-  const { data, isLoading, error } = useDocuments(currentFilters)
+  const [filters, setFilters] = useFilters()
+  const { data, isLoading, error } = useDocuments()
 
   const handlePageChange = (newPage: number) => {
-    updatePage(newPage)
+    setFilters(f => ({...f, page: newPage}))
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const hasActiveFilters = currentFilters.q || currentFilters.documentType || 
-    currentFilters.researchArea || currentFilters.author
+  const hasActiveFilters = filters.q || filters.documentType || 
+    filters.researchArea || filters.author
 
   if (error) {
     return (
@@ -45,49 +34,6 @@ export function DocumentList() {
 
   return (
     <div className="space-y-6">
-      {/* Barra de busca e filtros */}
-      <div className="space-y-4">
-        <div className="flex gap-2">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Buscar documentos..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          {/* TODO: Migrar filtros avançados - remover disabled após implementação */}
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="px-3"
-            disabled
-            title="Filtros em processo de migração"
-          >
-            <Filter className="h-4 w-4" />
-          </Button>
-          {hasActiveFilters && (
-            <Button
-              variant="outline"
-              onClick={clearFilters}
-              className="px-3"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-        </div>
-
-        {/* TODO: Migrar filtros avançados - implementar Select e Input funcionais */}
-        {showFilters && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-card border rounded-lg opacity-50">
-            <div className="text-center text-muted-foreground text-sm py-8 col-span-full">
-              🚧 Filtros em processo de migração - funcionalidade será implementada em breve
-            </div>
-          </div>
-        )}
-      </div>
-
       {/* Resultados */}
       {isLoading ? (
         <div className="space-y-4">
@@ -108,7 +54,7 @@ export function DocumentList() {
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <span>
               Mostrando {data.documents.length} de {data.pagination.total} documentos
-              {currentFilters.page > 1 && ` (página ${currentFilters.page})`}
+              {filters.page > 1 && ` (página ${filters.page})`}
             </span>
             {hasActiveFilters && (
               <span className="font-medium">
@@ -147,7 +93,7 @@ export function DocumentList() {
               }
             </p>
             {hasActiveFilters && (
-              <Button variant="outline" onClick={clearFilters}>
+              <Button variant="outline" onClick={() => setFilters(RESET_FILTERS)}>
                 Limpar filtros
               </Button>
             )}
