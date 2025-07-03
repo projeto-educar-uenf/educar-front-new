@@ -126,12 +126,27 @@ export default defineConfig({
 - Tailwind CSS com config completa
 
 ## 📝 **Estratégia de Commits**
+**⚠️ IMPORTANTE: O usuário é responsável pelos commits!**
+
+O assistente irá implementar as mudanças e o usuário fará os commits manualmente. Esta é uma colaboração onde:
+
+- ✅ **Assistente**: Implementa código, migra páginas, faz análises
+- ✅ **Usuário**: Controla git (add, commit, push), toma decisões sobre próximos passos
+- 🤝 **Colaboração**: Usuário orienta qual iteração realizar e tira dúvidas
+
 ```bash
-# Exemplo de commits graduais
+# Exemplo de commits graduais (feitos pelo usuário)
 git commit -m "feat: migrar HomePage - componente base sem APIs"
-git commit -m "feat: adicionar React Router para HomePage"
+git commit -m "feat: adicionar React Router para HomePage"  
 git commit -m "feat: migrar LoginPage com mock de autenticação"
 ```
+
+**Fluxo de trabalho:**
+1. Assistente pergunta qual próximo passo realizar, fazendo sugestões
+2. Usuário escolhe e orienta a iteração
+3. Assistente implementa as mudanças
+4. Usuário revisa, faz git add e commit
+5. Repetir até conclusão da migração
 
 ## ⚠️ **Pontos de Atenção**
 - Remover todas as diretivas `"use client"`
