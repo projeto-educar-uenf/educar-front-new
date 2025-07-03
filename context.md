@@ -36,6 +36,19 @@ educar-new/ (Vite + React - DESTINO)
    - QueryClient configurado no main.tsx
 3. **Componentes UI migrados**: Todos os componentes de `educar/components/ui/` copiados e funcionando
 4. **Build funcionando**: Projeto compila sem erros
+5. **✅ CSS CORRIGIDO**: 
+   - Downgrade do Tailwind CSS v4 → v3 para estabilidade
+   - Configuração PostCSS corrigida
+   - CSS customizado do shadcn/ui funcionando
+6. **✅ PÁGINA INICIAL MIGRADA**:
+   - HomePage funcional com roteamento React Router
+   - LoginPage básica criada
+   - Navbar simples com theme toggle mockado
+   - Footer completo com logo e informações UENF
+7. **✅ ASSETS MIGRADOS**:
+   - Imagens logo-preta.webp e logo-branca.webp copiadas
+   - Título da página atualizado para "Projeto Educar UENF"
+   - Meta description configurada
 
 ## 🛠 **Ferramentas e Comandos Úteis**
 
@@ -86,8 +99,8 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
 
 2. **Migrar página por página**:
    - ✅ Componentes UI (feito)
-   - 🔄 Página inicial (`educar/app/page.tsx` → `educar-new/src/pages/HomePage.tsx`)
-   - 🔄 Login page
+   - ✅ Página inicial (`educar/app/page.tsx` → `educar-new/src/pages/HomePage.tsx`) ✅ MIGRADO
+   - ✅ Login page básica ✅ CRIADO
    - 🔄 Documentos page
    - 🔄 Perfil page
    - 🔄 Admin page
@@ -161,7 +174,25 @@ cd educar-new
 bun run dev  # verificar se ainda funciona
 ```
 
-**Status atual**: ✅ Base configurada, componentes UI funcionando, pronto para migrar páginas individuais.
+**Status atual**: ✅ Base configurada, componentes UI funcionando, **HomePage e LoginPage migradas e funcionais**.
+
+## 🔍 **Descobertas da Migração**
+
+### **Problemas Resolvidos:**
+1. **Tailwind CSS v4 → v3**: v4 ainda é experimental e incompatível com shadcn/ui
+2. **PostCSS Configuration**: `@tailwindcss/postcss` vs `tailwindcss` padrão
+3. **Asset Management**: Next.js otimiza imagens automaticamente, precisamos copiar manualmente
+4. **CSS Variables**: Shadcn/ui depende de variáveis CSS específicas que precisam estar corretas
+
+### **Diferenças de Arquitetura:**
+- **Next.js**: Server-side routing, otimização automática de assets, API routes integradas
+- **Vite + React**: Client-side routing, build mais rápido, configuração mais manual
+
+### **Próximas Prioridades:**
+1. **Theme Provider**: Implementar dark mode funcional (atualmente mockado)
+2. **Context de Autenticação**: Criar sistema de auth mock para substituir NextAuth
+3. **Página de Documentos**: Migrar com TanStack Query + mocks de API
+4. **State Management**: Definir como gerenciar estado global sem Next.js
 
 ## 📋 **Checklist de Migração por Página**
 
