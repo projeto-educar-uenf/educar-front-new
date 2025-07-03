@@ -62,6 +62,19 @@ educar-new/ (Vite + React - DESTINO)
    - ProtectedRoute component para rotas privadas
    - Páginas ProfilePage, DocumentosPage e AdminPage criadas
    - Integração completa: login funciona, rotas protegidas, navbar dinâmico
+10. **✅ DOCUMENTOS PAGE FUNCIONAL**:
+   - Sistema completo de listagem de documentos com TanStack Query
+   - DocumentCard migrado com download funcional
+   - Busca por título implementada com debounce
+   - Paginação funcional integrada com URL params
+   - APIs mockadas com dados realistas (160+ documentos de exemplo)
+   - UX melhorada: loading states, error handling, empty states
+   - 🔄 **PENDENTE**: Filtros avançados (desabilitados temporariamente)
+   - 🔄 **PENDENTE**: Páginas individuais de documentos
+
+11. **✅ NAVEGAÇÃO E REDIRECIONAMENTOS COMPLETOS**:
+   - Sistema de roteamento baseado no estado de autenticação
+   - Redirecionamentos automáticos implementados
 
 ## 🛠 **Ferramentas e Comandos Úteis**
 
@@ -115,9 +128,11 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
    - ✅ Página inicial (`educar/app/page.tsx` → `educar-new/src/pages/HomePage.tsx`) ✅ MIGRADO
    - ✅ Login page básica ✅ CRIADO + FUNCIONAL
    - ✅ Sistema de autenticação ✅ IMPLEMENTADO
-   - 🔄 Documentos page (estrutura básica criada, precisa implementar funcionalidades)
-   - 🔄 Perfil page (estrutura básica criada, precisa implementar funcionalidades)
-   - 🔄 Admin page (estrutura básica criada, precisa implementar funcionalidades)
+   - ✅ Documentos page (listagem e busca funcionais)
+   - 🔄 **PENDENTE**: Filtros da DocumentosPage (desabilitados, aguardando migração)
+   - 🔄 **PENDENTE**: Páginas individuais de documentos (/documentos/[id])
+   - 🔄 **PENDENTE**: Perfil page (estrutura básica criada, funcionalidades pendentes)
+   - 🔄 **PENDENTE**: Admin page (estrutura básica criada, funcionalidades pendentes)
 
 3. **Substituir APIs Next.js por TanStack Query**:
    ```tsx
@@ -181,6 +196,13 @@ git commit -m "feat: migrar LoginPage com mock de autenticação"
 - Substituir `next/image` por `<img>` ou biblioteca alternativa
 - Converter server components para client components
 - Substituir `getServerSession` por context/estado local
+- **FUNCIONALIDADES INCOMPLETAS**: Sempre desabilitar (disabled) com comentários explicativos para evitar testes errôneos
+
+## 📋 **Regra: Funcionalidades Incompletas**
+**Para evitar testes errôneos, toda funcionalidade não migrada deve estar:**
+1. **Desabilitada** (`disabled={true}`) ou removida
+2. **Comentada** com `// TODO: Migrar [funcionalidade] - remover disabled após implementação`
+3. **Documentada** no context.md como "PENDENTE"
 
 ## 🚀 **Comando para começar nova sessão**
 ```bash

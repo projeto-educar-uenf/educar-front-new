@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Link, useNavigate, useLocation } from "react-router-dom"
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -13,7 +13,12 @@ export function LoginPage() {
   const [error, setError] = useState("")
   const navigate = useNavigate()
   const location = useLocation()
-  const { login, isLoading } = useAuth()
+  const { login, isLoading, isAuthenticated } = useAuth()
+
+  // Redirecionar usuários já logados
+  if (isAuthenticated) {
+    return <Navigate to="/documentos" replace />
+  }
 
   // Pegar a página de origem para redirecionar após login
   const from = location.state?.from?.pathname || "/documentos"

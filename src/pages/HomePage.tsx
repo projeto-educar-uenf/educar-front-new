@@ -1,9 +1,16 @@
-import { Link } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
+import { useAuth } from "@/components/auth-provider"
 
 export function HomePage() {
+  const { isAuthenticated } = useAuth()
+
+  // Redirecionar usuários logados para /documentos
+  if (isAuthenticated) {
+    return <Navigate to="/documentos" replace />
+  }
   return (
     <div className="flex min-h-screen flex-col">
       <Navbar />
