@@ -1,4 +1,3 @@
-import { Navbar } from '@/components/navbar'
 import { Footer } from '@/components/footer'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -6,9 +5,8 @@ import { Badge } from '@/components/ui/badge'
 
 export function AdminPage() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <>
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <h1 className="text-3xl font-bold">Administração</h1>
@@ -84,8 +82,8 @@ export function AdminPage() {
             </TabsContent>
           </Tabs>
         </div>
-      </main>
+      </div>
       <Footer />
-    </div>
+    </>
   )
 }
