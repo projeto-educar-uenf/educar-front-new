@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+bun.lock
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# Generated files
+*.d.ts
+
+# Config files
+.env*
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

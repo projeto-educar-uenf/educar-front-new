@@ -106,6 +106,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const foundUser = MOCK_USERS.find(u => u.email === email && u.password === password)
     
     if (foundUser) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _, ...userWithoutPassword } = foundUser
       setUser(userWithoutPassword)
       setIsLoading(false)
