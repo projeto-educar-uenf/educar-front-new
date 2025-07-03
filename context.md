@@ -35,7 +35,11 @@ educar-new/ (Vite + React - DESTINO)
    - CSS com design tokens do shadcn/ui
    - QueryClient configurado no main.tsx
 3. **Componentes UI migrados**: Todos os componentes de `educar/components/ui/` copiados e funcionando
-4. **Build funcionando**: Projeto compila sem erros
+4. **✅ BUILD E DEPLOY FUNCIONANDO**: 
+   - Projeto compila sem erros com `bun run build`
+   - Aplicação roda corretamente em produção com `bun run serve`
+   - Arquivo `_redirects` configurado para SPAs (resolve erro 404 em rotas client-side)
+   - Vite preview configurado para servir em produção na porta 80
 5. **✅ CSS CORRIGIDO**: 
    - Downgrade do Tailwind CSS v4 → v3 para estabilidade
    - Configuração PostCSS corrigida
