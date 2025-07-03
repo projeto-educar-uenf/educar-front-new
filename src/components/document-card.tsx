@@ -1,6 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Download, Eye, Calendar, User } from "lucide-react"
+import { Download, Eye, Calendar, User, ExternalLink } from "lucide-react"
+import { Link } from "react-router-dom"
 import { Document } from "@/lib/types"
 
 interface DocumentCardProps {
@@ -40,13 +41,12 @@ export function DocumentCard({ document }: DocumentCardProps) {
             {formatFileSize(document.fileSize)}
           </span>
         </div>
-        {/* TODO: Migrar página individual de documento - remover cursor-not-allowed e adicionar Link após implementação */}
-        <div 
-          className="font-semibold text-sm leading-tight line-clamp-2 cursor-not-allowed opacity-75"
-          title="Página do documento em processo de migração"
+        <Link 
+          to={`/documentos/${document.id}`}
+          className="font-semibold text-sm leading-tight line-clamp-2 hover:text-primary transition-colors"
         >
           {document.title}
-        </div>
+        </Link>
       </CardHeader>
       
       <CardContent className="pb-3 flex-grow">
@@ -83,15 +83,28 @@ export function DocumentCard({ document }: DocumentCardProps) {
         )}
       </CardContent>
       
-      <CardFooter className="pt-0">
-        <Button 
-          className="w-full" 
-          size="sm"
-          onClick={handleDownload}
-        >
-          <Download className="mr-2 h-4 w-4" />
-          Download
-        </Button>
+      <CardFooter className="pt-0 space-y-2">
+        <div className="flex gap-2 w-full">
+          <Button 
+            className="flex-1" 
+            size="sm"
+            onClick={handleDownload}
+          >
+            <Download className="mr-2 h-4 w-4" />
+            Download
+          </Button>
+          <Button 
+            asChild
+            variant="outline" 
+            size="sm"
+            className="flex-1"
+          >
+            <Link to={`/documentos/${document.id}`}>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              Ver Detalhes
+            </Link>
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   )

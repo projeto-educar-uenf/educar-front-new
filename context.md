@@ -70,9 +70,24 @@ educar-new/ (Vite + React - DESTINO)
    - APIs mockadas com dados realistas (160+ documentos de exemplo)
    - UX melhorada: loading states, error handling, empty states
    - 🔄 **PENDENTE**: Filtros avançados (desabilitados temporariamente)
-   - 🔄 **PENDENTE**: Páginas individuais de documentos
 
-11. **✅ NAVEGAÇÃO E REDIRECIONAMENTOS COMPLETOS**:
+11. **✅ PÁGINAS INDIVIDUAIS DE DOCUMENTOS FUNCIONAIS**:
+   - Rota dinâmica `/documentos/:id` implementada
+   - DocumentDetailPage completa com informações detalhadas
+   - Navegação clicável dos DocumentCards para detalhes
+   - Layout responsivo com informações organizadas
+   - Estados de loading, erro e documento não encontrado
+   - Botões de download e visualização (visualização online desabilitada temporariamente)
+   - Breadcrumbs e navegação de volta para listagem
+   - Integração completa com TanStack Query
+
+12. **✅ LAYOUT PERSISTENTE COM NAVBAR**:
+   - Layout component criado com Outlet do React Router
+   - Navbar sempre visível no topo da aplicação
+   - Todas as páginas restructuradas para usar o layout comum
+   - Footer mantido em cada página conforme necessário
+
+13. **✅ NAVEGAÇÃO E REDIRECIONAMENTOS COMPLETOS**:
    - Sistema de roteamento baseado no estado de autenticação
    - Redirecionamentos automáticos implementados
 
@@ -128,9 +143,10 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
    - ✅ Página inicial (`educar/app/page.tsx` → `educar-new/src/pages/HomePage.tsx`) ✅ MIGRADO
    - ✅ Login page básica ✅ CRIADO + FUNCIONAL
    - ✅ Sistema de autenticação ✅ IMPLEMENTADO
-   - ✅ Documentos page (listagem e busca funcionais)
-   - 🔄 **PENDENTE**: Filtros da DocumentosPage (desabilitados, aguardando migração)
-   - 🔄 **PENDENTE**: Páginas individuais de documentos (/documentos/[id])
+   - ✅ Documentos page (listagem e busca funcionais) ✅ MIGRADO
+   - ✅ Páginas individuais de documentos (/documentos/[id]) ✅ MIGRADO
+   - ✅ Layout persistente com Navbar ✅ IMPLEMENTADO
+   - 🔄 **PENDENTE**: Filtros avançados da DocumentosPage (desabilitados, aguardando migração)
    - 🔄 **PENDENTE**: Perfil page (estrutura básica criada, funcionalidades pendentes)
    - 🔄 **PENDENTE**: Admin page (estrutura básica criada, funcionalidades pendentes)
 
@@ -210,7 +226,29 @@ cd educar-new
 bun run dev  # verificar se ainda funciona
 ```
 
-**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider e Sistema de Autenticação totalmente funcionais**.
+**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação e Páginas Individuais de Documentos totalmente funcionais**.
+
+## 🎯 **PRÓXIMO PASSO RECOMENDADO: Filtros Avançados na DocumentosPage**
+
+### **Por que esta funcionalidade agora:**
+1. **Completa a DocumentosPage**: A funcionalidade de listagem já está 90% completa
+2. **UX crítica**: Filtros são essenciais para navegar em uma biblioteca com 160+ documentos
+3. **Implementação modular**: Não interfere em outras funcionalidades já implementadas
+4. **Base já existe**: A API mock já tem suporte a filtros, só falta a UI
+
+### **Escopo da próxima iteração:**
+- ✅ Filtros por tipo de documento (Artigo Científico, Dissertação, Tese, etc.)
+- ✅ Filtros por área de pesquisa (Ciências Ambientais, Agricultura, Geologia, etc.)
+- ✅ Filtro por autor
+- ✅ Integração com URL params (bookmarkable filters)
+- ✅ UI responsiva com collapse em mobile
+- ✅ Clear all filters functionality
+- ✅ Contadores de documentos por filtro
+
+### **Alternativas para próximas iterações:**
+1. **ProfilePage completa** - Implementar edição de perfil, upload de avatar
+2. **AdminPage funcional** - Gestão completa de usuários e documentos  
+3. **Sistema de uploads** - Permitir upload de novos documentos
 
 ## 🔍 **Descobertas da Migração**
 
