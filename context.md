@@ -69,7 +69,7 @@ educar-new/ (Vite + React - DESTINO)
    - Paginação funcional integrada com URL params
    - APIs mockadas com dados realistas (160+ documentos de exemplo)
    - UX melhorada: loading states, error handling, empty states
-   - 🔄 **PENDENTE**: Filtros avançados (desabilitados temporariamente)
+   - ✅ **FILTROS AVANÇADOS IMPLEMENTADOS**: Sistema completo de filtros funcionais
 
 11. **✅ PÁGINAS INDIVIDUAIS DE DOCUMENTOS FUNCIONAIS**:
    - Rota dinâmica `/documentos/:id` implementada
@@ -90,6 +90,16 @@ educar-new/ (Vite + React - DESTINO)
 13. **✅ NAVEGAÇÃO E REDIRECIONAMENTOS COMPLETOS**:
    - Sistema de roteamento baseado no estado de autenticação
    - Redirecionamentos automáticos implementados
+
+14. **✅ FILTROS AVANÇADOS TOTALMENTE FUNCIONAIS**:
+   - **SearchInput**: Integrado no navbar para páginas /documentos e /admin
+   - **FilterButton**: Botão de filtros com ícone que abre drawer responsivo
+   - **DocumentFilters**: Componente completo com filtros por tipo, área e autor + contadores
+   - **DrawerProvider**: Context para gerenciar estado global do drawer de filtros
+   - **Layout com Drawer**: Drawer global renderizado no layout para filtros
+   - **useFilters hook**: Integração com URL params para filtros persistentes
+   - **UX otimizada**: Aplicação automática, clear filters, badges de filtros ativos
+   - **Responsivo**: Drawer em mobile/tablet, funciona perfeitamente em desktop
 
 ## 🛠 **Ferramentas e Comandos Úteis**
 
@@ -146,7 +156,7 @@ grep -r "import.*from" educar/components/ | grep -v "node_modules" | sort | uniq
    - ✅ Documentos page (listagem e busca funcionais) ✅ MIGRADO
    - ✅ Páginas individuais de documentos (/documentos/[id]) ✅ MIGRADO
    - ✅ Layout persistente com Navbar ✅ IMPLEMENTADO
-   - 🔄 **PENDENTE**: Filtros avançados da DocumentosPage (desabilitados, aguardando migração)
+   - ✅ **FILTROS AVANÇADOS IMPLEMENTADOS**: Sistema completo de filtros funcionais
    - 🔄 **PENDENTE**: Perfil page (estrutura básica criada, funcionalidades pendentes)
    - 🔄 **PENDENTE**: Admin page (estrutura básica criada, funcionalidades pendentes)
 
@@ -226,29 +236,28 @@ cd educar-new
 bun run dev  # verificar se ainda funciona
 ```
 
-**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação e Páginas Individuais de Documentos totalmente funcionais**.
+**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação, Páginas Individuais de Documentos e Filtros Avançados totalmente funcionais**.
 
-## 🎯 **PRÓXIMO PASSO RECOMENDADO: Filtros Avançados na DocumentosPage**
+## 🎯 **PRÓXIMO PASSO RECOMENDADO: ProfilePage Completa**
 
 ### **Por que esta funcionalidade agora:**
-1. **Completa a DocumentosPage**: A funcionalidade de listagem já está 90% completa
-2. **UX crítica**: Filtros são essenciais para navegar em uma biblioteca com 160+ documentos
-3. **Implementação modular**: Não interfere em outras funcionalidades já implementadas
-4. **Base já existe**: A API mock já tem suporte a filtros, só falta a UI
+1. **Funcionalidade essencial de usuário**: Edição de perfil é funcionalidade básica em qualquer sistema
+2. **Estrutura já existe**: Página básica já criada, só falta implementar funcionalidades
+3. **Não interfere com outras funcionalidades**: Implementação isolada
+4. **Prepara para Admin**: ProfilePage prepara o terreno para funcionalidades administrativas
 
 ### **Escopo da próxima iteração:**
-- ✅ Filtros por tipo de documento (Artigo Científico, Dissertação, Tese, etc.)
-- ✅ Filtros por área de pesquisa (Ciências Ambientais, Agricultura, Geologia, etc.)
-- ✅ Filtro por autor
-- ✅ Integração com URL params (bookmarkable filters)
-- ✅ UI responsiva com collapse em mobile
-- ✅ Clear all filters functionality
-- ✅ Contadores de documentos por filtro
+- ✅ Formulário de edição de perfil (nome, email, bio, etc.)
+- ✅ Upload de avatar com preview
+- ✅ Validação de formulário
+- ✅ Estados de loading/success/error
+- ✅ Mock API para atualização de perfil
+- ✅ Integração com sistema de autenticação existente
 
 ### **Alternativas para próximas iterações:**
-1. **ProfilePage completa** - Implementar edição de perfil, upload de avatar
-2. **AdminPage funcional** - Gestão completa de usuários e documentos  
-3. **Sistema de uploads** - Permitir upload de novos documentos
+1. **AdminPage funcional** - Gestão completa de usuários e documentos  
+2. **Sistema de uploads de documentos** - Permitir upload de novos documentos
+3. **Melhorias na DocumentosPage** - Visualização inline, favoritos, etc.
 
 ## 🔍 **Descobertas da Migração**
 
