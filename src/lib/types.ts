@@ -35,16 +35,18 @@ export interface DocumentsResponse {
 }
 
 // Tipo baseado no retorno do useFilters hook
-export type DocumentFilters = ReturnType<typeof import('../hooks/useFilters').default>[0] & {
+export type DocumentFilters = ReturnType<
+  typeof import("../hooks/useFilters").default
+>[0] & {
   limit?: number;
-}
+};
 
 // Tipos para administração de usuários
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'USER' | 'ADMIN';
+  role: "USER" | "ADMIN";
   documentCount: number;
   createdAt: string;
   image?: string;
@@ -72,7 +74,7 @@ export interface AdminStats {
 
 // Tipos para operações CRUD
 export interface UpdateUserRequest {
-  role?: 'USER' | 'ADMIN';
+  role?: "USER" | "ADMIN";
 }
 
 export interface UpdateDocumentRequest {

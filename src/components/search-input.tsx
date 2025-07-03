@@ -1,9 +1,9 @@
-import { Input } from "@/components/ui/input"
-import { Search } from "lucide-react"
-import useFilters from "@/hooks/useFilters"
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import useFilters from "@/hooks/useFilters";
 
 export function SearchInput() {
-  const [ {q}, setSearchQuery]  = useFilters()
+  const [{ q }, setSearchQuery] = useFilters();
 
   return (
     <div className="relative flex-1">
@@ -12,8 +12,8 @@ export function SearchInput() {
         placeholder="Buscar documentos..."
         className="pl-8 w-full md:w-[300px] lg:w-[400px]"
         value={q ?? ""}
-        onChange={(e) => setSearchQuery({q: e.target.value})}
+        onChange={(e) => setSearchQuery({ q: e.target.value })}
       />
     </div>
-  )
+  );
 }

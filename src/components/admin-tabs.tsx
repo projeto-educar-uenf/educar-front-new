@@ -1,10 +1,10 @@
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { UserManagement } from "./user-management"
-import { DocumentManagement } from "./document-management"
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserManagement } from "./user-management";
+import { DocumentManagement } from "./document-management";
 
 export function AdminTabs() {
-  const [activeTab, setActiveTab] = useState("users")
+  const [activeTab, setActiveTab] = useState("users");
 
   return (
     <Tabs defaultValue="users" value={activeTab} onValueChange={setActiveTab}>
@@ -21,5 +21,5 @@ export function AdminTabs() {
         <DocumentManagement />
       </TabsContent>
     </Tabs>
-  )
+  );
 }

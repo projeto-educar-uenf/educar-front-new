@@ -1,25 +1,36 @@
-
-import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
-export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
+export function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   // Limitar o número de páginas exibidas
-  let pagesToShow: (number | string)[] = pages
+  let pagesToShow: (number | string)[] = pages;
   if (totalPages > 5) {
     if (currentPage <= 3) {
-      pagesToShow = [...pages.slice(0, 5), "...", totalPages]
+      pagesToShow = [...pages.slice(0, 5), "...", totalPages];
     } else if (currentPage >= totalPages - 2) {
-      pagesToShow = [1, "...", ...pages.slice(totalPages - 5)]
+      pagesToShow = [1, "...", ...pages.slice(totalPages - 5)];
     } else {
-      pagesToShow = [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
+      pagesToShow = [
+        1,
+        "...",
+        currentPage - 1,
+        currentPage,
+        currentPage + 1,
+        "...",
+        totalPages,
+      ];
     }
   }
 
@@ -62,5 +73,5 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         <span className="sr-only">Próxima página</span>
       </Button>
     </div>
-  )
+  );
 }

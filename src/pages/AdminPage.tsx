@@ -1,5 +1,5 @@
-import { Footer } from '@/components/footer'
-import { AdminTabs } from '@/components/admin-tabs'
+import { Footer } from "@/components/footer";
+import { AdminTabs } from "@/components/admin-tabs";
 
 export function AdminPage() {
   return (
@@ -19,5 +19,5 @@ export function AdminPage() {
       </div>
       <Footer />
     </>
-  )
+  );
 }

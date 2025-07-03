@@ -1,51 +1,58 @@
-import { useState } from "react"
-import { Link, useNavigate, useLocation, Navigate } from "react-router-dom"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { useAuth } from "@/components/auth-provider"
+import { useState } from "react";
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useAuth } from "@/components/auth-provider";
 
 export function LoginPage() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const navigate = useNavigate()
-  const location = useLocation()
-  const { login, isLoading, isAuthenticated } = useAuth()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isLoading, isAuthenticated } = useAuth();
 
   // Redirecionar usuários já logados
   if (isAuthenticated) {
-    return <Navigate to="/documentos" replace />
+    return <Navigate to="/documentos" replace />;
   }
 
   // Pegar a página de origem para redirecionar após login
-  const from = location.state?.from?.pathname || "/documentos"
+  const from = location.state?.from?.pathname || "/documentos";
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError("")
+    e.preventDefault();
+    setError("");
 
     if (!email || !password) {
-      setError("Por favor, preencha todos os campos")
-      return
+      setError("Por favor, preencha todos os campos");
+      return;
     }
 
-    const result = await login(email, password)
+    const result = await login(email, password);
 
     if (result.success) {
-      navigate(from, { replace: true })
+      navigate(from, { replace: true });
     } else {
-      setError(result.error || "Erro ao fazer login")
+      setError(result.error || "Erro ao fazer login");
     }
-  }
+  };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative"
       style={{
-        background: 'linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%)',
+        background:
+          "linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%)",
       }}
     >
       {/* Modo dark sobrepõe com outro gradiente */}
@@ -68,14 +75,18 @@ export function LoginPage() {
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          
+
           <div className="bg-blue-50 dark:bg-blue-950 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
             <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
               👥 Usuários de Demonstração:
             </h3>
             <div className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-              <div><strong>Usuário:</strong> joao.silva@uenf.br | Senha: 123456</div>
-              <div><strong>Admin:</strong> maria.santos@uenf.br | Senha: admin123</div>
+              <div>
+                <strong>Usuário:</strong> joao.silva@uenf.br | Senha: 123456
+              </div>
+              <div>
+                <strong>Admin:</strong> maria.santos@uenf.br | Senha: admin123
+              </div>
             </div>
           </div>
 
@@ -115,5 +126,5 @@ export function LoginPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

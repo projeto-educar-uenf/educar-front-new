@@ -1,60 +1,64 @@
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
-import { fetchDocumentById } from '@/lib/api'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { 
-  ArrowLeft, 
-  Download, 
-  Eye, 
-  Calendar, 
-  User, 
-  FileText, 
+import { useParams, useNavigate, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { fetchDocumentById } from "@/lib/api";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  ArrowLeft,
+  Download,
+  Eye,
+  Calendar,
+  User,
+  FileText,
   Tag,
   Users,
-  ExternalLink
-} from 'lucide-react'
+  ExternalLink,
+} from "lucide-react";
 
 export function DocumentDetailPage() {
-  const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
-  const { data: document, isLoading, error } = useQuery({
-    queryKey: ['document', id],
+  const {
+    data: document,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["document", id],
     queryFn: () => fetchDocumentById(id!),
     enabled: !!id,
-  })
+  });
 
   const handleDownload = () => {
-    if (!document) return
-    
+    if (!document) return;
+
     // Simula download do documento
-    const link = window.document.createElement('a')
-    link.href = document.fileUrl
-    link.download = `${document.title}.pdf`
-    window.document.body.appendChild(link)
-    link.click()
-    window.document.body.removeChild(link)
-  }
+    const link = window.document.createElement("a");
+    link.href = document.fileUrl;
+    link.download = `${document.title}.pdf`;
+    window.document.body.appendChild(link);
+    link.click();
+    window.document.body.removeChild(link);
+  };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes'
-    const k = 1024
-    const sizes = ['Bytes', 'KB', 'MB', 'GB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-  }
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('pt-BR', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
+    return new Date(dateString).toLocaleDateString("pt-BR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
   if (isLoading) {
     return (
@@ -77,7 +81,7 @@ export function DocumentDetailPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !document) {
@@ -93,13 +97,13 @@ export function DocumentDetailPage() {
               O documento que você está procurando não existe ou foi removido.
             </p>
           </div>
-          <Button onClick={() => navigate('/documentos')} variant="outline">
+          <Button onClick={() => navigate("/documentos")} variant="outline">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Voltar para Documentos
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -114,9 +118,9 @@ export function DocumentDetailPage() {
           <span className="text-foreground">{document.title}</span>
         </div>
 
-        <Button 
-          onClick={() => navigate('/documentos')} 
-          variant="ghost" 
+        <Button
+          onClick={() => navigate("/documentos")}
+          variant="ghost"
           className="mb-6"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -126,7 +130,7 @@ export function DocumentDetailPage() {
         {/* Cabeçalho do documento */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">{document.title}</h1>
-          
+
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
@@ -225,27 +229,29 @@ export function DocumentDetailPage() {
                   </label>
                   <p className="font-medium">{document.documentType}</p>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     Área de Pesquisa
                   </label>
                   <p className="font-medium">{document.researchArea}</p>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     Tamanho do Arquivo
                   </label>
-                  <p className="font-medium">{formatFileSize(document.fileSize)}</p>
+                  <p className="font-medium">
+                    {formatFileSize(document.fileSize)}
+                  </p>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">
                     Formato
@@ -265,7 +271,10 @@ export function DocumentDetailPage() {
                   <Avatar>
                     <AvatarImage src={document.createdBy.image} />
                     <AvatarFallback>
-                      {document.createdBy.name.split(' ').map(n => n[0]).join('')}
+                      {document.createdBy.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
@@ -275,9 +284,9 @@ export function DocumentDetailPage() {
                     </p>
                   </div>
                 </div>
-                
+
                 <Separator className="my-4" />
-                
+
                 <div className="text-sm text-muted-foreground">
                   <p>Criado em {formatDate(document.createdAt)}</p>
                   {document.updatedAt !== document.createdAt && (
@@ -293,20 +302,16 @@ export function DocumentDetailPage() {
                 <CardTitle>Ações</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button 
-                  onClick={handleDownload} 
-                  className="w-full" 
+                <Button
+                  onClick={handleDownload}
+                  className="w-full"
                   variant="outline"
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Download
                 </Button>
-                
-                <Button 
-                  className="w-full" 
-                  variant="outline"
-                  disabled
-                >
+
+                <Button className="w-full" variant="outline" disabled>
                   <ExternalLink className="mr-2 h-4 w-4" />
                   Visualizar Online
                   {/* TODO: Implementar visualização online - remover disabled após implementação */}
@@ -317,5 +322,5 @@ export function DocumentDetailPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

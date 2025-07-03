@@ -1,11 +1,24 @@
-import { useState } from "react"
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { 
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -15,70 +28,71 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Search, Edit, Trash2, Eye, Loader2 } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
-import { Link } from "react-router-dom"
-import { fetchDocuments, deleteDocument, getAdminStats } from "@/lib/api"
-import useDebounce from "@/hooks/useDebounce"
+} from "@/components/ui/alert-dialog";
+import { Search, Edit, Trash2, Eye, Loader2 } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom";
+import { fetchDocuments, deleteDocument, getAdminStats } from "@/lib/api";
+import useDebounce from "@/hooks/useDebounce";
 
 export function DocumentManagement() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const debouncedSearchQuery = useDebounce(searchQuery, 300)
-  const queryClient = useQueryClient()
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  const queryClient = useQueryClient();
 
   // Query para buscar documentos
   const { data: documentsData, isLoading: documentsLoading } = useQuery({
-    queryKey: ['admin-documents', debouncedSearchQuery],
-    queryFn: () => fetchDocuments({ 
-      q: debouncedSearchQuery, 
-      page: 1, 
-      documentType: undefined,
-      researchArea: undefined,
-      author: undefined,
-      limit: 20 
-    }),
-    staleTime: 30000
-  })
+    queryKey: ["admin-documents", debouncedSearchQuery],
+    queryFn: () =>
+      fetchDocuments({
+        q: debouncedSearchQuery,
+        page: 1,
+        documentType: undefined,
+        researchArea: undefined,
+        author: undefined,
+        limit: 20,
+      }),
+    staleTime: 30000,
+  });
 
   // Query para estatísticas
   const { data: stats } = useQuery({
-    queryKey: ['admin-stats'],
+    queryKey: ["admin-stats"],
     queryFn: getAdminStats,
-    staleTime: 60000
-  })
+    staleTime: 60000,
+  });
 
   // Mutation para deletar documento
   const deleteDocumentMutation = useMutation({
     mutationFn: deleteDocument,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-documents'] })
-      queryClient.invalidateQueries({ queryKey: ['admin-stats'] })
-      queryClient.invalidateQueries({ queryKey: ['documents'] }) // Invalidar lista geral também
+      queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["documents"] }); // Invalidar lista geral também
       toast({
         title: "Documento excluído",
         description: "O documento foi excluído com sucesso.",
-      })
+      });
     },
     onError: (error) => {
-      console.error("Erro:", error)
+      console.error("Erro:", error);
       toast({
         title: "Erro",
         description: "Não foi possível excluir o documento.",
         variant: "destructive",
-      })
-    }
-  })
+      });
+    },
+  });
 
   const handleDeleteDocument = async (documentId: string) => {
-    deleteDocumentMutation.mutate(documentId)
-  }
+    deleteDocumentMutation.mutate(documentId);
+  };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("pt-BR")
-  }
+    return new Date(dateString).toLocaleDateString("pt-BR");
+  };
 
-  const documents = documentsData?.documents || []
+  const documents = documentsData?.documents || [];
 
   return (
     <div className="space-y-6">
@@ -87,7 +101,9 @@ export function DocumentManagement() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Documentos</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total de Documentos
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalDocuments}</div>
@@ -95,15 +111,21 @@ export function DocumentManagement() {
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Documentos este Mês</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Documentos este Mês
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stats.documentsThisMonth}</div>
+              <div className="text-2xl font-bold">
+                {stats.documentsThisMonth}
+              </div>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total de Downloads</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total de Downloads
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.totalDownloads}</div>
@@ -138,7 +160,9 @@ export function DocumentManagement() {
                   <TableHead>Título</TableHead>
                   <TableHead>Tipo</TableHead>
                   <TableHead className="hidden md:table-cell">Autor</TableHead>
-                  <TableHead className="hidden md:table-cell">Data de criação</TableHead>
+                  <TableHead className="hidden md:table-cell">
+                    Data de criação
+                  </TableHead>
                   <TableHead>Ações</TableHead>
                 </TableRow>
               </TableHeader>
@@ -162,20 +186,31 @@ export function DocumentManagement() {
                       </TableCell>
                       <TableCell className="hidden md:table-cell">
                         {doc.authors[0]}
-                        {doc.authors.length > 1 && <span className="text-muted-foreground"> +{doc.authors.length - 1}</span>}
+                        {doc.authors.length > 1 && (
+                          <span className="text-muted-foreground">
+                            {" "}
+                            +{doc.authors.length - 1}
+                          </span>
+                        )}
                       </TableCell>
-                      <TableCell className="hidden md:table-cell">{formatDate(doc.createdAt)}</TableCell>
+                      <TableCell className="hidden md:table-cell">
+                        {formatDate(doc.createdAt)}
+                      </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <Link to={`/documentos/${doc.id}`}>
-                            <Button variant="ghost" size="icon" title="Ver documento">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              title="Ver documento"
+                            >
                               <Eye className="h-4 w-4" />
                               <span className="sr-only">Ver</span>
                             </Button>
                           </Link>
-                          <Button 
-                            variant="ghost" 
-                            size="icon" 
+                          <Button
+                            variant="ghost"
+                            size="icon"
                             title="Editar documento"
                             disabled={true}
                           >
@@ -183,12 +218,12 @@ export function DocumentManagement() {
                             <span className="sr-only">Editar</span>
                           </Button>
                           {/* TODO: Implementar edição de documentos */}
-                          
+
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
+                              <Button
+                                variant="ghost"
+                                size="icon"
                                 title="Excluir documento"
                                 disabled={deleteDocumentMutation.isPending}
                               >
@@ -198,10 +233,12 @@ export function DocumentManagement() {
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+                                <AlertDialogTitle>
+                                  Confirmar exclusão
+                                </AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Tem certeza que deseja excluir o documento "{doc.title}"? 
-                                  Esta ação não pode ser desfeita.
+                                  Tem certeza que deseja excluir o documento "
+                                  {doc.title}"? Esta ação não pode ser desfeita.
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
@@ -232,5 +269,5 @@ export function DocumentManagement() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

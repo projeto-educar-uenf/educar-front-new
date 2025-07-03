@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -9,14 +9,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { LogOut, User } from "lucide-react"
-import { useAuth } from "./auth-provider"
+} from "@/components/ui/dropdown-menu";
+import { LogOut, User } from "lucide-react";
+import { useAuth } from "./auth-provider";
 
 export function UserNav() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth();
 
-  if (!user) return null
+  if (!user) return null;
 
   const initials = user.name
     ? user.name
@@ -24,13 +24,13 @@ export function UserNav() {
         .map((n) => n[0])
         .join("")
         .toUpperCase()
-    : "UN"
+    : "UN";
 
   const handleLogout = () => {
-    logout()
+    logout();
     // Opcional: redirecionar para home
-    window.location.href = "/"
-  }
+    window.location.href = "/";
+  };
 
   return (
     <DropdownMenu>
@@ -46,7 +46,9 @@ export function UserNav() {
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user.name}</p>
-            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+            <p className="text-xs leading-none text-muted-foreground">
+              {user.email}
+            </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -65,5 +67,5 @@ export function UserNav() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

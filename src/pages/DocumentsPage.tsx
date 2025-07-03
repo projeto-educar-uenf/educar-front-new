@@ -1,5 +1,5 @@
-import { Footer } from '@/components/footer'
-import { DocumentList } from '@/components/document-list'
+import { Footer } from "@/components/footer";
+import { DocumentList } from "@/components/document-list";
 
 export function DocumentsPage() {
   return (
@@ -9,11 +9,11 @@ export function DocumentsPage() {
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">Biblioteca</h1>
           </div>
-          
+
           <DocumentList />
         </div>
       </div>
       <Footer />
     </>
-  )
+  );
 }

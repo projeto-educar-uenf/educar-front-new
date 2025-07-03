@@ -1,29 +1,34 @@
-import { Mail, Phone, MapPin } from "lucide-react"
-import { useTheme } from "./theme-provider"
-import { useEffect, useState } from "react"
+import { Mail, Phone, MapPin } from "lucide-react";
+import { useTheme } from "./theme-provider";
+import { useEffect, useState } from "react";
 
 export function Footer() {
-  const { theme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
   // Evitar hidratação incorreta
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   // Determinar qual logo usar baseado no tema
   const getLogoSrc = () => {
-    if (!mounted) return "/images/logo-preta.webp" // fallback
-    
+    if (!mounted) return "/images/logo-preta.webp"; // fallback
+
     if (theme === "dark") {
-      return "/images/logo-branca.webp"
+      return "/images/logo-branca.webp";
     } else if (theme === "light") {
-      return "/images/logo-preta.webp"
-    } else { // system
-      const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-      return isDarkMode ? "/images/logo-branca.webp" : "/images/logo-preta.webp"
+      return "/images/logo-preta.webp";
+    } else {
+      // system
+      const isDarkMode = window.matchMedia(
+        "(prefers-color-scheme: dark)",
+      ).matches;
+      return isDarkMode
+        ? "/images/logo-branca.webp"
+        : "/images/logo-preta.webp";
     }
-  }
+  };
 
   return (
     <footer className="border-t bg-background">
@@ -48,12 +53,15 @@ export function Footer() {
           </div>
           <div className="flex items-center justify-center md:justify-start">
             <Phone className="h-4 w-4 mr-2" />
-            <span className="text-sm">(22) 2739-7119 - Gerência de Comunicação</span>
+            <span className="text-sm">
+              (22) 2739-7119 - Gerência de Comunicação
+            </span>
           </div>
           <div className="flex items-center justify-center md:justify-start">
             <MapPin className="h-4 w-4 mr-2" />
             <span className="text-sm">
-              Av. Alberto Lamego, 2000 - Parque Califórnia Campos dos Goytacazes - RJ CEP: 28013-602
+              Av. Alberto Lamego, 2000 - Parque Califórnia Campos dos Goytacazes
+              - RJ CEP: 28013-602
             </span>
           </div>
         </div>
@@ -64,5 +72,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

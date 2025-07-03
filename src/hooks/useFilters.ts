@@ -1,4 +1,9 @@
-import { NumberParam, StringParam, useQueryParams, withDefault } from "use-query-params";
+import {
+  NumberParam,
+  StringParam,
+  useQueryParams,
+  withDefault,
+} from "use-query-params";
 
 export const filtersConfig = {
   q: StringParam,
@@ -6,7 +11,7 @@ export const filtersConfig = {
   documentType: StringParam,
   researchArea: StringParam,
   author: StringParam,
-}
+};
 
 export const RESET_FILTERS = {
   q: undefined,
@@ -14,8 +19,8 @@ export const RESET_FILTERS = {
   documentType: undefined,
   researchArea: undefined,
   author: undefined,
-}
+};
 
 export default function useFilters() {
-  return useQueryParams(filtersConfig)
+  return useQueryParams(filtersConfig);
 }

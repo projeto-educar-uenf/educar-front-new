@@ -1,11 +1,10 @@
+import { Toaster as Sonner } from "sonner";
+import * as React from "react";
 
-import { Toaster as Sonner } from "sonner"
-import * as React from "react"
-
-type ToasterProps = React.ComponentProps<typeof Sonner>
+type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const theme = "light" // Por enquanto fixo, depois criaremos um provider
+  const theme = "light"; // Por enquanto fixo, depois criaremos um provider
 
   return (
     <Sonner
@@ -24,7 +23,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       {...props}
     />
-  )
-}
+  );
+};
 
-export { Toaster }
+export { Toaster };
