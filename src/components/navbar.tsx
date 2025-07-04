@@ -6,9 +6,10 @@ import { useAuth } from "./auth-provider";
 import { SearchInput } from "./search-input";
 import { FilterButton } from "./filter-button";
 import { AddDocumentButton } from "./add-document-button";
+import { Settings, BookOpen } from "lucide-react";
 
 export function Navbar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
 
   const showSearchAndFilters =
@@ -31,14 +32,28 @@ export function Navbar() {
               <nav className="flex items-center space-x-6 text-sm font-medium ml-6">
                 <Link
                   to="/documentos"
-                  className={`transition-colors hover:text-foreground/80 ${
+                  className={`transition-colors hover:text-foreground/80 flex items-center gap-1 ${
                     location.pathname === "/documentos"
                       ? "text-foreground"
                       : "text-foreground/60"
                   }`}
                 >
+                  <BookOpen className="h-4 w-4" />
                   Biblioteca
                 </Link>
+                {user?.role === "ADMIN" && (
+                  <Link
+                    to="/admin"
+                    className={`transition-colors hover:text-foreground/80 flex items-center gap-1 ${
+                      location.pathname.startsWith("/admin")
+                        ? "text-foreground"
+                        : "text-foreground/60"
+                    }`}
+                  >
+                    <Settings className="h-4 w-4" />
+                    Administração
+                  </Link>
+                )}
               </nav>
             )}
           </div>
