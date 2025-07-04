@@ -1,9 +1,7 @@
 name: Deploy to Production
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -11,8 +9,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y expect rsync
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
     
     - name: Deploy to server
       env:
@@ -21,44 +19,25 @@ jobs:
         PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
       run: |
-        # Criar script expect para rsync
-        cat > rsync_deploy.exp << 'EOF'
-        #!/usr/bin/expect -f
-        set timeout -1
-        set password [lindex $argv 0]
-        set deploy_path [lindex $argv 1]
-        
-        spawn rsync -avz --delete -e "ssh -p 722" \
-          --exclude=.git \
-          --exclude=node_modules \
-          --exclude=.env.local \
-          --exclude=dist \
-          ./ $username@$host:$deploy_path
-        
-        expect {
-          "password:" {
-            send "$password\r"
-            exp_continue
-          }
-          eof
-        }
-        EOF
-        
-        chmod +x rsync_deploy.exp
-        ./rsync_deploy.exp "$PASSWORD" "$DEPLOY_PATH"
-        
-        # Executar comandos no servidor
-        sshpass -p "$PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no desenv@educar.uenf.br "
+        echo "🚀 Executando deploy no servidor..."
+        sshpass -p "$PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no $USERNAME@$HOST "
           cd $DEPLOY_PATH
+          git pull
           
           # Criar .env
-          cat > .env << EOF
-VITE_API_URL=${{ secrets.VITE_API_URL }}
-VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-NODE_ENV=production
-EOF
+          echo '🔧 Configurando variáveis de ambiente...'
+          echo 'VITE_API_URL=${{ secrets.VITE_API_URL }}' > .env
+          echo 'VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}' >> .env
+          echo 'NODE_ENV=production' >> .env
           
           # Executar deploy
-          chmod +x start_production.sh
           ./start_production.sh
+          
+          # Verificar se container está rodando
+          if docker ps | grep -q educar-front-container; then
+            echo '✅ Deploy concluído com sucesso!'
+          else
+            echo '❌ Erro no deploy!'
+            exit 1
+          fi
         "
