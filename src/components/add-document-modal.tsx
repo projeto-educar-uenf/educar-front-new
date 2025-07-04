@@ -118,19 +118,53 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validação completa dos campos obrigatórios
+    const validationErrors: string[] = [];
+
+    // Validar arquivo
     if (!file) {
-      toast({
-        title: "Arquivo obrigatório",
-        description: "Por favor, selecione um arquivo para upload.",
-        variant: "destructive",
-      });
-      return;
+      validationErrors.push("Arquivo é obrigatório");
     }
 
-    if (!formData.title || !formData.description || formData.authors.length === 0) {
+    // Validar título
+    if (!formData.title.trim()) {
+      validationErrors.push("Título é obrigatório");
+    } else if (formData.title.trim().length < 5) {
+      validationErrors.push("Título deve ter pelo menos 5 caracteres");
+    }
+
+    // Validar descrição
+    if (!formData.description.trim()) {
+      validationErrors.push("Descrição é obrigatória");
+    } else if (formData.description.trim().length < 10) {
+      validationErrors.push("Descrição deve ter pelo menos 10 caracteres");
+    }
+
+    // Validar tipo de documento
+    if (!formData.documentType) {
+      validationErrors.push("Tipo de documento é obrigatório");
+    }
+
+    // Validar área de pesquisa
+    if (!formData.researchArea) {
+      validationErrors.push("Área de pesquisa é obrigatória");
+    }
+
+    // Validar autores
+    if (formData.authors.length === 0) {
+      validationErrors.push("Pelo menos um autor é obrigatório");
+    }
+
+    // Validar palavras-chave
+    if (formData.keywords.length === 0) {
+      validationErrors.push("Pelo menos uma palavra-chave é obrigatória");
+    }
+
+    // Se há erros de validação, mostrar todos
+    if (validationErrors.length > 0) {
       toast({
         title: "Campos obrigatórios",
-        description: "Preencha título, descrição e adicione pelo menos um autor.",
+        description: validationErrors.join(", "),
         variant: "destructive",
       });
       return;
@@ -138,19 +172,32 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
 
     const uploadData: CreateDocumentRequest = {
       ...formData,
-      file,
+      file: file!, // Safe to use ! here because we validated file exists above
     };
 
     uploadMutation.mutate(uploadData);
   };
 
   const addAuthor = () => {
-    if (currentAuthor.trim() && !formData.authors.includes(currentAuthor.trim())) {
+    const trimmedAuthor = currentAuthor.trim();
+    if (trimmedAuthor && !formData.authors.includes(trimmedAuthor)) {
       setFormData(prev => ({
         ...prev,
-        authors: [...prev.authors, currentAuthor.trim()]
+        authors: [...prev.authors, trimmedAuthor]
       }));
       setCurrentAuthor("");
+    } else if (!trimmedAuthor) {
+      toast({
+        title: "Nome inválido",
+        description: "Digite um nome válido para o autor.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Autor duplicado",
+        description: "Este autor já foi adicionado.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -162,12 +209,25 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
   };
 
   const addKeyword = () => {
-    if (currentKeyword.trim() && !formData.keywords.includes(currentKeyword.trim())) {
+    const trimmedKeyword = currentKeyword.trim();
+    if (trimmedKeyword && !formData.keywords.includes(trimmedKeyword)) {
       setFormData(prev => ({
         ...prev,
-        keywords: [...prev.keywords, currentKeyword.trim()]
+        keywords: [...prev.keywords, trimmedKeyword]
       }));
       setCurrentKeyword("");
+    } else if (!trimmedKeyword) {
+      toast({
+        title: "Palavra-chave inválida",
+        description: "Digite uma palavra-chave válida.",
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Palavra-chave duplicada",
+        description: "Esta palavra-chave já foi adicionada.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -224,6 +284,10 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
           </DialogTitle>
           <DialogDescription>
             Preencha as informações do documento e faça o upload do arquivo.
+            <br />
+            <span className="text-sm text-muted-foreground">
+              * Campos obrigatórios: arquivo, título, descrição, tipo, área, autores e palavras-chave
+            </span>
           </DialogDescription>
         </DialogHeader>
 
@@ -300,6 +364,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
               placeholder="Digite o título do documento"
               required
             />
+            <p className="text-xs text-muted-foreground">
+              {formData.title.length}/∞ caracteres (mínimo 5)
+            </p>
           </div>
 
           {/* Descrição */}
@@ -313,6 +380,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
               rows={3}
               required
             />
+            <p className="text-xs text-muted-foreground">
+              {formData.description.length}/∞ caracteres (mínimo 10)
+            </p>
           </div>
 
           {/* Tipo e Área */}
@@ -372,6 +442,10 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
                 +
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground">
+              Adicione pelo menos um autor. Pressione Enter ou clique em + para adicionar. 
+              ({formData.authors.length} autor{formData.authors.length !== 1 ? 'es' : ''} adicionado{formData.authors.length !== 1 ? 's' : ''})
+            </p>
             {formData.authors.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.authors.map((author) => (
@@ -389,7 +463,7 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
 
           {/* Palavras-chave */}
           <div className="space-y-2">
-            <Label>Palavras-chave</Label>
+            <Label>Palavras-chave *</Label>
             <div className="flex gap-2">
               <Input
                 value={currentKeyword}
@@ -401,6 +475,10 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
                 +
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground">
+              Adicione pelo menos uma palavra-chave. Pressione Enter ou clique em + para adicionar.
+              ({formData.keywords.length} palavra{formData.keywords.length !== 1 ? 's' : ''}-chave adicionada{formData.keywords.length !== 1 ? 's' : ''})
+            </p>
             {formData.keywords.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.keywords.map((keyword) => (
