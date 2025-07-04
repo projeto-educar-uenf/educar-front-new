@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Navbar } from "./navbar";
 import { DrawerProvider, useDrawer } from "./drawer-provider";
+import { AddDocumentProvider } from "./add-document-provider";
 import { DocumentFilters } from "./document-filters";
 import { Drawer } from "./ui/drawer";
 
@@ -29,7 +30,9 @@ function LayoutContent() {
 export function Layout() {
   return (
     <DrawerProvider>
-      <LayoutContent />
+      <AddDocumentProvider>
+        <LayoutContent />
+      </AddDocumentProvider>
     </DrawerProvider>
   );
 }

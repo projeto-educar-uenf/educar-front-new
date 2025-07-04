@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Download, Eye, Calendar, User, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Document } from "@/lib/types";
+import { canPreviewDocument, openDocumentPreview } from "@/lib/api";
 
 interface DocumentCardProps {
   document: Document;

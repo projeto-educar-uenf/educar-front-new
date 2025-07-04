@@ -35,6 +35,7 @@ import { Link } from "react-router-dom";
 import { fetchDocuments, deleteDocument, getAdminStats } from "@/lib/api";
 import useDebounce from "@/hooks/useDebounce";
 
+
 export function DocumentManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
@@ -143,7 +144,7 @@ export function DocumentManagement() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative">
+          <div className="relative max-w-sm">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Buscar documento..."

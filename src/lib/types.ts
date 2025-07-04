@@ -85,3 +85,20 @@ export interface UpdateDocumentRequest {
   researchArea?: string;
   keywords?: string[];
 }
+
+// Tipos para upload de documentos
+export interface CreateDocumentRequest {
+  title: string;
+  description: string;
+  authors: string[];
+  documentType: string;
+  researchArea: string;
+  keywords: string[];
+  file: File;
+}
+
+export interface UploadResponse {
+  success: boolean;
+  document?: Document;
+  message: string;
+}

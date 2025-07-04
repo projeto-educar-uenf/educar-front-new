@@ -5,6 +5,7 @@ import { UserNav } from "./user-nav";
 import { useAuth } from "./auth-provider";
 import { SearchInput } from "./search-input";
 import { FilterButton } from "./filter-button";
+import { AddDocumentButton } from "./add-document-button";
 
 export function Navbar() {
   const { isAuthenticated } = useAuth();
@@ -50,7 +51,10 @@ export function Navbar() {
           <div className="ml-auto flex items-center gap-3">
             <ThemeToggle />
             {isAuthenticated ? (
-              <UserNav />
+              <>
+                <AddDocumentButton />
+                <UserNav />
+              </>
             ) : (
               <Link to="/login">
                 <Button>Login</Button>

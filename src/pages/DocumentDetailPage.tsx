@@ -1,6 +1,6 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { fetchDocumentById } from "@/lib/api";
+import { fetchDocumentById, canPreviewDocument, openDocumentPreview } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -311,10 +311,16 @@ export function DocumentDetailPage() {
                   Download
                 </Button>
 
-                <Button className="w-full" variant="outline" disabled>
+                <Button
+                  onClick={() => openDocumentPreview(document)}
+                  className="w-full"
+                  variant="outline"
+                  disabled={!canPreviewDocument(document.fileMimeType)}
+                >
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  Visualizar Online
-                  {/* TODO: Implementar visualização online - remover disabled após implementação */}
+                  {canPreviewDocument(document.fileMimeType) 
+                    ? "Visualizar Online" 
+                    : "Visualização não disponível"}
                 </Button>
               </CardContent>
             </Card>

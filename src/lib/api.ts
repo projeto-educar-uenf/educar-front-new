@@ -7,6 +7,8 @@ import {
   AdminStats,
   UpdateUserRequest,
   UpdateDocumentRequest,
+  CreateDocumentRequest,
+  UploadResponse,
 } from "./types";
 
 // Dados mockados para simular uma base de documentos
@@ -505,4 +507,118 @@ export async function getAdminStats(): Promise<AdminStats> {
     documentsThisMonth,
     totalDownloads,
   };
+}
+
+// API para upload de documentos
+export async function uploadDocument(
+  documentData: CreateDocumentRequest,
+): Promise<UploadResponse> {
+  await delay(1500); // Simula upload que demora mais
+
+  // Validações
+  const allowedTypes = [
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+
+  if (!allowedTypes.includes(documentData.file.type)) {
+    return {
+      success: false,
+      message: "Tipo de arquivo não permitido. Use PDF, DOC, DOCX ou TXT.",
+    };
+  }
+
+  const maxSize = 10 * 1024 * 1024; // 10MB
+  if (documentData.file.size > maxSize) {
+    return {
+      success: false,
+      message: "Arquivo muito grande. Tamanho máximo: 10MB.",
+    };
+  }
+
+  // Criar blob URL real do arquivo para simular upload
+  const blobUrl = URL.createObjectURL(documentData.file);
+
+  // Simular criação do documento
+  const newDocument: Document = {
+    id: `doc-${Date.now()}`,
+    title: documentData.title,
+    description: documentData.description,
+    authors: documentData.authors,
+    publicationDate: new Date().toISOString(),
+    documentType: documentData.documentType,
+    researchArea: documentData.researchArea,
+    keywords: documentData.keywords,
+    fileUrl: blobUrl, // Blob URL real para visualização/download
+    fileSize: documentData.file.size,
+    fileMimeType: documentData.file.type,
+    viewCount: 0,
+    downloadCount: 0,
+    createdBy: {
+      id: "current-user",
+      name: "Admin Usuário",
+      email: "admin@uenf.br",
+    },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+
+  // Adicionar à lista mock (simular persistência)
+  mockDocuments.unshift(newDocument);
+
+  return {
+    success: true,
+    document: newDocument,
+    message: "Documento enviado com sucesso!",
+  };
+}
+
+// Função auxiliar para verificar se um documento pode ser visualizado inline
+export function canPreviewDocument(mimeType: string): boolean {
+  const previewableTypes = [
+    "application/pdf",
+    "text/plain",
+    "text/html",
+    "text/markdown",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+  ];
+  return previewableTypes.includes(mimeType);
+}
+
+// Função para abrir documento em nova aba para visualização
+export function openDocumentPreview(doc: Document): void {
+  if (canPreviewDocument(doc.fileMimeType)) {
+    window.open(doc.fileUrl, "_blank");
+  } else {
+    // Para arquivos que não podem ser visualizados, força download
+    const link = document.createElement("a");
+    link.href = doc.fileUrl;
+    link.download = `${doc.title}.${getFileExtension(doc.fileMimeType)}`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+}
+
+// Função auxiliar para obter extensão do arquivo baseada no MIME type
+function getFileExtension(mimeType: string): string {
+  const extensions: Record<string, string> = {
+    "application/pdf": "pdf",
+    "application/msword": "doc",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      "docx",
+    "text/plain": "txt",
+    "text/html": "html",
+    "text/markdown": "md",
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/gif": "gif",
+    "image/webp": "webp",
+  };
+  return extensions[mimeType] || "file";
 }

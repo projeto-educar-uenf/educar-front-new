@@ -120,6 +120,50 @@ educar-new/ (Vite + React - DESTINO)
    - **APIs Mock Funcionais**: fetchUsers, updateUser, deleteDocument, getAdminStats
    - **Tipos Completos**: User, AdminStats, UpdateRequests definidos
 
+16. **✅ SISTEMA DE UPLOAD DE DOCUMENTOS FUNCIONAL**:
+   - **AddDocumentModal**: Modal completo de upload com validações
+     - Upload por drag & drop ou seleção de arquivo
+     - Formulário completo (título, descrição, autores, área, tipo, keywords)
+     - Validação de tipos de arquivo (PDF, DOC, DOCX, TXT)
+     - Validação de tamanho (máx 10MB)
+     - Loading states e feedback de upload
+   - **AddDocumentButton**: Botão global na navbar (ícone +)
+   - **AddDocumentProvider**: Context global para modal
+   - **API Mock de Upload**: uploadDocument com blob URLs reais
+   - **Integração Completa**: Atualização automática das listas após upload
+
+17. **✅ VISUALIZAÇÃO INLINE DE DOCUMENTOS FUNCIONAL**:
+   - **Preview System**: Sistema de preview baseado em blob URLs
+   - **canPreviewDocument**: Função que verifica tipos suportados (PDF, TXT, imagens)
+   - **openDocumentPreview**: Abre documento em nova aba ou força download
+   - **DocumentDetailPage**: Botão "Visualizar Online" funcional e inteligente
+   - **DocumentCard**: Botão "Preview" nos cards com 3 ações (Download/Preview/Detalhes)
+   - **Blob URLs**: Documentos enviados geram URLs reais para teste de preview
+
+## 🛠 **DETALHES TÉCNICOS DA IMPLEMENTAÇÃO**
+
+### **🔧 Arquitetura do Sistema de Upload**
+```tsx
+// Fluxo completo de upload:
+1. AddDocumentButton (navbar) → 2. AddDocumentProvider (context) → 
+3. AddDocumentModal (formulário) → 4. uploadDocument API → 
+5. Blob URL creation → 6. Query invalidation → 7. UI update
+```
+
+### **📱 UX/UI Implementadas**
+- **Drag & Drop**: Área de upload visual com feedback de arrastar
+- **Validação em Tempo Real**: Feedback imediato para tipos/tamanhos de arquivo
+- **Loading States**: Spinners e desabilitação durante upload
+- **Toast Notifications**: Feedback de sucesso/erro com mensagens detalhadas
+- **Query Invalidation**: Atualização automática de todas as listas relacionadas
+- **Responsive Design**: Modal responsivo com scroll em telas pequenas
+
+### **🔍 Sistema de Preview Inteligente**
+- **Detecção de Tipo**: Identifica automaticamente se arquivo pode ser visualizado
+- **Fallback Gracioso**: Download automático para arquivos não visualizáveis  
+- **Performance**: Blob URLs locais para preview instantâneo
+- **UX Consistency**: Botões consistentes em cards e página de detalhes
+
 ## 🛠 **Ferramentas e Comandos Úteis**
 
 **Usando BUN (não npm):**
@@ -256,28 +300,46 @@ bun run dev  # verificar se ainda funciona
 
 **Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação, Páginas Individuais de Documentos, Filtros Avançados e AdminPage 100% funcionais**.
 
-## 🎯 **MIGRAÇÃO COMPLETAMENTE FUNCIONAL - PRÓXIMOS PASSOS OPCIONAIS**
+## 🎯 **MIGRAÇÃO COMPLETAMENTE FUNCIONAL + SISTEMA DE UPLOAD E PREVIEW**
 
 ### **🏆 MARCOS ALCANÇADOS:**
-A migração principal está **COMPLETA**! Temos um sistema totalmente funcional com:
+A migração está **COMPLETA E EXPANDIDA** com funcionalidades avançadas:
 - ✅ **Autenticação mock** funcionando perfeitamente
-- ✅ **Gestão de documentos** completa (listagem, filtros, detalhes)
+- ✅ **Gestão de documentos** completa (listagem, filtros, detalhes, upload, preview)
 - ✅ **Administração** completa (usuários, documentos, estatísticas)
+- ✅ **Sistema de Upload** global funcional com validações
+- ✅ **Preview de Documentos** inline com blob URLs reais
 - ✅ **UI/UX** polida com loading states e error handling
 - ✅ **Arquitetura sólida** com TanStack Query e React Router
 
-### **🔄 POSSÍVEIS MELHORIAS (Opcionais):**
-1. **Sistema de Upload de Documentos** - Permitir upload via interface admin
-2. **Visualização Inline** - Viewer de PDFs integrado na página
-3. **Google OAuth** - Substituir sistema mock por autenticação real
-4. **Sistema de Favoritos** - Bookmarks de documentos para usuários
-5. **Analytics Avançados** - Relatórios detalhados de uso
-6. **Notificações** - Sistema de alertas para admins
+### **🆕 FUNCIONALIDADES AVANÇADAS IMPLEMENTADAS:**
 
-### **Alternativas para próximas iterações:**
-1. **Sistema de uploads de documentos** - Permitir upload de novos documentos  
-2. **Melhorias na DocumentosPage** - Visualização inline, favoritos, etc.
-3. **Integração Google OAuth** - Substituir sistema mock por autenticação real
+#### **📤 SISTEMA DE UPLOAD DE DOCUMENTOS**
+- **AddDocumentModal**: Modal sofisticado com drag & drop
+  - Upload por arrastar/soltar ou clique para selecionar
+  - Validação de tipos: PDF, DOC, DOCX, TXT (máx 10MB)
+  - Formulário completo: título, descrição, autores, área, tipo, keywords
+  - Sistema de tags para autores e palavras-chave
+  - Loading states durante upload com feedback visual
+- **AddDocumentButton**: Botão global na navbar (ícone +)
+- **AddDocumentProvider**: Context global para gerenciar modal
+- **API uploadDocument**: Mock que cria blob URLs reais para teste
+- **Invalidação de Queries**: Atualização automática de todas as listas
+
+#### **👁️ SISTEMA DE PREVIEW DE DOCUMENTOS**
+- **canPreviewDocument**: Verifica tipos suportados (PDF, TXT, imagens)
+- **openDocumentPreview**: Abre em nova aba ou força download
+- **DocumentDetailPage**: Botão "Visualizar Online" inteligente
+- **DocumentCard**: 3 ações (Download/Preview/Detalhes) com preview funcional
+- **Blob URLs**: Documentos enviados geram URLs reais navegáveis
+
+### **🔄 PRÓXIMAS MELHORIAS POSSÍVEIS:**
+1. **Validação Avançada de Formulários** - Campos obrigatórios e regras específicas
+2. **Google OAuth** - Substituir sistema mock por autenticação real  
+3. **Sistema de Favoritos** - Bookmarks de documentos para usuários
+4. **Analytics Avançados** - Relatórios detalhados de uso
+5. **Notificações** - Sistema de alertas para admins
+6. **Edição de Documentos** - Permitir modificar metadados de documentos existentes
 
 ## 🔍 **Descobertas da Migração**
 
