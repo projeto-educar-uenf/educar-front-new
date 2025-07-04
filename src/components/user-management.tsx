@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Search, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/auth-context";
 import { useUsers } from "../queries";
 import { useAdminStats } from "../queries";
 import { useUpdateUser } from "@/mutations";

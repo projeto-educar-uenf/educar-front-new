@@ -1,5 +1,5 @@
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/auth-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,

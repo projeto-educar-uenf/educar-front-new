@@ -1,7 +1,7 @@
 import { Link, Navigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Footer } from "@/components/footer";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/auth-context";
 
 export function HomePage() {
   const { isAuthenticated } = useAuth();

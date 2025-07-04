@@ -11,96 +11,139 @@ import {
   UploadResponse,
 } from "./lib/types";
 
-// Importar dados mockados dos arquivos JSON
-import documentsData from "./data/documentsMock.json";
-import usersData from "./data/usersMock.json";
+// Configuração da API
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-// Função utilitária para simular delay de rede
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Função utilitária para fazer requisições HTTP
+async function apiRequest<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = `${API_URL}${endpoint}`;
+  
+  const defaultOptions: RequestInit = {
+    headers: {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+    credentials: 'include', // Para cookies de autenticação
+    ...options,
+  };
 
-// Dados mockados importados dos arquivos JSON
-const mockDocuments: Document[] = [...documentsData] as Document[];
-const mockUsers: User[] = [...usersData] as User[];
+  try {
+    const response = await fetch(url, defaultOptions);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error(`API Request failed for ${endpoint}:`, error);
+    throw error;
+  }
+}
+
+// Função para upload de arquivos
+async function uploadFile(
+  endpoint: string,
+  formData: FormData,
+  options: RequestInit = {}
+): Promise<any> {
+  const url = `${API_URL}${endpoint}`;
+  
+  const defaultOptions: RequestInit = {
+    method: 'POST',
+    credentials: 'include',
+    ...options,
+    // Não definir Content-Type para FormData - o browser faz isso automaticamente
+    headers: {
+      ...options.headers,
+    },
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(url, defaultOptions);
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    console.error(`Upload failed for ${endpoint}:`, error);
+    throw error;
+  }
+}
 
 // ========================
 // DOCUMENT API FUNCTIONS
 // ========================
 
 export async function fetchDocuments(filters: Partial<DocumentFilters> = {}): Promise<DocumentsResponse> {
-  await delay(300); // Simular latência de rede
-
-  let filteredDocuments = [...mockDocuments];
-
-  // Aplicar filtros
-  if (filters.q) {
-    const searchTerm = filters.q.toLowerCase();
-    filteredDocuments = filteredDocuments.filter(
-      doc =>
-        doc.title.toLowerCase().includes(searchTerm) ||
-        doc.description.toLowerCase().includes(searchTerm) ||
-        doc.authors.some(author => author.toLowerCase().includes(searchTerm)) ||
-        doc.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm))
-    );
-  }
-
-  if (filters.documentType) {
-    filteredDocuments = filteredDocuments.filter(
-      doc => doc.documentType === filters.documentType
-    );
-  }
-
-  if (filters.researchArea) {
-    filteredDocuments = filteredDocuments.filter(
-      doc => doc.researchArea === filters.researchArea
-    );
-  }
-
-  if (filters.author) {
-    filteredDocuments = filteredDocuments.filter(
-      doc => doc.authors.some(author => 
-        author.toLowerCase().includes(filters.author!.toLowerCase())
-      )
-    );
-  }
-
-  // Paginação
+  const params = new URLSearchParams();
+  
+  // Converter filtros para parâmetros de query
+  if (filters.q) params.append('search', filters.q);
+  if (filters.documentType) params.append('documentType', filters.documentType);
+  if (filters.researchArea) params.append('researchArea', filters.researchArea);
+  if (filters.author) params.append('author', filters.author);
+  if (filters.limit) params.append('limit', filters.limit.toString());
+  
+  // Converter page para offset (backend usa offset, frontend usa page)
   const page = filters.page || 1;
   const limit = filters.limit || 10;
-  const startIndex = (page - 1) * limit;
-  const endIndex = startIndex + limit;
-  const paginatedDocuments = filteredDocuments.slice(startIndex, endIndex);
-
-  return {
-    documents: paginatedDocuments,
+  const offset = (page - 1) * limit;
+  params.append('offset', offset.toString());
+  
+  const query = params.toString();
+  const endpoint = `/api/documents${query ? '?' + query : ''}`;
+  
+  const response = await apiRequest<{
+    success: boolean;
+    data: Document[];
     pagination: {
-      page,
-      pages: Math.ceil(filteredDocuments.length / limit),
-      total: filteredDocuments.length,
-      limit,
+      total: number;
+      limit: number;
+      offset: number;
+      pages: number;
+      hasNext: boolean;
+      hasPrev: boolean;
+    };
+  }>(endpoint);
+  
+  // Converter formato do backend para formato esperado pelo frontend
+  return {
+    documents: response.data,
+    pagination: {
+      page: Math.floor(response.pagination.offset / response.pagination.limit) + 1,
+      pages: response.pagination.pages,
+      total: response.pagination.total,
+      limit: response.pagination.limit,
     },
   };
 }
 
 export async function fetchDocumentById(id: string): Promise<Document | null> {
-  await delay(200);
-
-  const document = mockDocuments.find(doc => doc.id === id);
-  if (!document) {
+  try {
+    const response = await apiRequest<{
+      success: boolean;
+      data: Document;
+    }>(`/api/documents/${id}`);
+    
+    return response.data;
+  } catch (error) {
+    // Se o documento não for encontrado, retornar null
     return null;
   }
-
-  // Incrementar view count
-  document.viewCount += 1;
-
-  return document;
 }
 
 export async function uploadDocument(
   documentData: CreateDocumentRequest,
 ): Promise<UploadResponse> {
-  await delay(500); // Simular upload
-
-  // Validações básicas
   if (!documentData.file) {
     return {
       success: false,
@@ -108,104 +151,102 @@ export async function uploadDocument(
     };
   }
 
-  // Validar tipo de arquivo
-  const allowedTypes = [
-    "application/pdf",
-    "application/msword",
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "text/plain",
-  ];
+  // Criar FormData para upload
+  const formData = new FormData();
+  formData.append('file', documentData.file);
+  formData.append('title', documentData.title);
+  formData.append('description', documentData.description);
+  formData.append('documentType', documentData.documentType);
+  formData.append('researchArea', documentData.researchArea);
+  
+  // Adicionar autores como JSON array
+  formData.append('authors', JSON.stringify(documentData.authors));
+  
+  // Adicionar keywords como JSON array
+  formData.append('keywords', JSON.stringify(documentData.keywords));
 
-  if (!allowedTypes.includes(documentData.file.type)) {
+  try {
+    const response = await uploadFile('/api/documents', formData);
+    
+    if (response.success) {
+      return {
+        success: true,
+        document: response.data,
+        message: response.message || "Documento enviado com sucesso!",
+      };
+    } else {
+      return {
+        success: false,
+        message: response.error || "Erro ao enviar documento",
+      };
+    }
+  } catch (error) {
     return {
       success: false,
-      message: "Tipo de arquivo não suportado. Use PDF, DOC, DOCX ou TXT.",
+      message: error instanceof Error ? error.message : "Erro ao enviar documento",
     };
   }
-
-  // Validar tamanho (10MB max)
-  const maxSize = 10 * 1024 * 1024; // 10MB
-  if (documentData.file.size > maxSize) {
-    return {
-      success: false,
-      message: "Arquivo muito grande. Tamanho máximo: 10MB.",
-    };
-  }
-
-  // Criar blob URL para o arquivo (simular upload)
-  const blobUrl = URL.createObjectURL(documentData.file);
-
-  const newDocument: Document = {
-    id: `doc-${Date.now()}`,
-    title: documentData.title,
-    description: documentData.description,
-    authors: documentData.authors,
-    publicationDate: new Date().toISOString(),
-    documentType: documentData.documentType,
-    researchArea: documentData.researchArea,
-    keywords: documentData.keywords,
-    fileUrl: blobUrl, // Blob URL real para visualização/download
-    fileSize: documentData.file.size,
-    fileMimeType: documentData.file.type,
-    viewCount: 0,
-    downloadCount: 0,
-    createdBy: {
-      id: "current-user",
-      name: "Admin Usuário",
-      email: "admin@uenf.br",
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  // Adicionar à lista mock (simular persistência)
-  mockDocuments.unshift(newDocument);
-
-  return {
-    success: true,
-    document: newDocument,
-    message: "Documento enviado com sucesso!",
-  };
 }
 
 export async function updateDocument(
   documentId: string,
   updates: UpdateDocumentRequest,
 ): Promise<Document> {
-  await delay(200);
-
-  const docIndex = mockDocuments.findIndex(doc => doc.id === documentId);
-  if (docIndex === -1) {
-    throw new Error("Documento não encontrado");
-  }
-
-  // Atualizar o documento
-  mockDocuments[docIndex] = {
-    ...mockDocuments[docIndex],
-    ...updates,
-    updatedAt: new Date().toISOString(),
-  };
-
-  return mockDocuments[docIndex];
+  const response = await apiRequest<{
+    success: boolean;
+    data: Document;
+  }>(`/api/documents/${documentId}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+  
+  return response.data;
 }
 
 export async function deleteDocument(documentId: string): Promise<void> {
-  await delay(200);
-
-  const docIndex = mockDocuments.findIndex(doc => doc.id === documentId);
-  if (docIndex === -1) {
-    throw new Error("Documento não encontrado");
-  }
-
-  // Remover o documento
-  mockDocuments.splice(docIndex, 1);
-
-  // Atualizar contagem de documentos dos usuários
-  mockUsers.forEach(user => {
-    if (user.id === mockDocuments[docIndex]?.createdBy.id) {
-      user.documentCount = Math.max(0, user.documentCount - 1);
-    }
+  await apiRequest(`/api/documents/${documentId}`, {
+    method: 'DELETE',
   });
+}
+
+// Função para download de documento
+export async function downloadDocument(documentId: string): Promise<void> {
+  const url = `${API_URL}/api/documents/${documentId}/download`;
+  
+  try {
+    const response = await fetch(url, {
+      credentials: 'include',
+    });
+    
+    if (!response.ok) {
+      throw new Error('Erro ao baixar documento');
+    }
+    
+    // Extrair nome do arquivo dos headers
+    const contentDisposition = response.headers.get('Content-Disposition');
+    let filename = `document-${documentId}`;
+    
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/);
+      if (filenameMatch) {
+        filename = filenameMatch[1];
+      }
+    }
+    
+    // Criar blob e link para download
+    const blob = await response.blob();
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(downloadUrl);
+  } catch (error) {
+    console.error('Download failed:', error);
+    throw error;
+  }
 }
 
 // ========================
@@ -213,27 +254,24 @@ export async function deleteDocument(documentId: string): Promise<void> {
 // ========================
 
 export async function fetchUsers(searchQuery = ""): Promise<UsersResponse> {
-  await delay(300);
-
-  let filteredUsers = [...mockUsers];
-
-  if (searchQuery) {
-    const searchTerm = searchQuery.toLowerCase();
-    filteredUsers = filteredUsers.filter(
-      user =>
-        user.name.toLowerCase().includes(searchTerm) ||
-        user.email.toLowerCase().includes(searchTerm)
-    );
-  }
-
+  const params = new URLSearchParams();
+  if (searchQuery) params.append('search', searchQuery);
+  
+  const query = params.toString();
+  const endpoint = `/api/users${query ? '?' + query : ''}`;
+  
+  const response = await apiRequest<{
+    success: boolean;
+    data: {
+      users: User[];
+      pagination: any;
+    };
+  }>(endpoint);
+  
+  // Converter formato do backend para frontend
   return {
-    users: filteredUsers,
-    pagination: {
-      page: 1,
-      pages: 1,
-      total: filteredUsers.length,
-      limit: filteredUsers.length,
-    },
+    users: response.data.users,
+    pagination: response.data.pagination,
   };
 }
 
@@ -241,20 +279,15 @@ export async function updateUser(
   userId: string,
   updates: UpdateUserRequest,
 ): Promise<User> {
-  await delay(200);
-
-  const userIndex = mockUsers.findIndex(user => user.id === userId);
-  if (userIndex === -1) {
-    throw new Error("Usuário não encontrado");
-  }
-
-  // Atualizar o usuário
-  mockUsers[userIndex] = {
-    ...mockUsers[userIndex],
-    ...updates,
-  };
-
-  return mockUsers[userIndex];
+  const response = await apiRequest<{
+    success: boolean;
+    data: User;
+  }>(`/api/users/${userId}`, {
+    method: 'PUT',
+    body: JSON.stringify(updates),
+  });
+  
+  return response.data;
 }
 
 // ========================
@@ -262,51 +295,25 @@ export async function updateUser(
 // ========================
 
 export async function getAdminStats(): Promise<AdminStats> {
-  await delay(200);
-
-  const totalUsers = mockUsers.length;
-  const totalAdmins = mockUsers.filter(user => user.role === "ADMIN").length;
-  const activeUsers = mockUsers.length; // Simular todos como ativos
-  const totalDocuments = mockDocuments.length;
+  const response = await apiRequest<{
+    success: boolean;
+    data: AdminStats;
+  }>('/api/admin/stats');
   
-  // Simular documentos do mês atual
-  const thisMonth = new Date().getMonth();
-  const thisYear = new Date().getFullYear();
-  const documentsThisMonth = mockDocuments.filter(doc => {
-    const docDate = new Date(doc.createdAt);
-    return docDate.getMonth() === thisMonth && docDate.getFullYear() === thisYear;
-  }).length;
-
-  const totalDownloads = mockDocuments.reduce(
-    (total, doc) => total + doc.downloadCount,
-    0
-  );
-
-  return {
-    totalUsers,
-    totalAdmins,
-    activeUsers,
-    totalDocuments,
-    documentsThisMonth,
-    totalDownloads,
-  };
+  return response.data;
 }
 
 // ========================
 // HELPER FUNCTIONS
 // ========================
 
-export function getFilterStats() {
-  // Retornar estatísticas para filtros
-  const documentTypes = [...new Set(mockDocuments.map(doc => doc.documentType))];
-  const researchAreas = [...new Set(mockDocuments.map(doc => doc.researchArea))];
-  const authors = [...new Set(mockDocuments.flatMap(doc => doc.authors))];
-
-  return {
-    documentTypes,
-    researchAreas,
-    authors,
-  };
+export async function getFilterStats() {
+  const response = await apiRequest<{
+    success: boolean;
+    data: any;
+  }>('/api/documents/filters');
+  
+  return response.data;
 }
 
 // Funções para preview de documentos
@@ -324,17 +331,39 @@ export function canPreviewDocument(document: Document): boolean {
 
 export function openDocumentPreview(document: Document): void {
   if (canPreviewDocument(document)) {
-    window.open(document.fileUrl, "_blank");
+    // Para preview, vamos abrir o link de download em uma nova aba
+    const previewUrl = `${API_URL}/api/documents/${document.id}/download`;
+    window.open(previewUrl, "_blank");
   } else {
     // Force download para tipos não visualizáveis
-    const link = window.document.createElement("a");
-    link.href = document.fileUrl;
-    link.download = `${document.title}.${document.fileMimeType.split("/")[1] || "file"}`;
-    window.document.body.appendChild(link);
-    link.click();
-    window.document.body.removeChild(link);
+    downloadDocument(document.id).catch(console.error);
   }
-  
-  // Incrementar download count
-  document.downloadCount += 1;
+}
+
+// ========================
+// AUTHENTICATION FUNCTIONS
+// ========================
+
+export async function getCurrentUser(): Promise<User | null> {
+  try {
+    const response = await apiRequest<{
+      success: boolean;
+      data: { user: User };
+    }>('/auth/me');
+    
+    return response.data.user;
+  } catch (error) {
+    // Se não autenticado, retornar null
+    return null;
+  }
+}
+
+export function loginWithGoogle(): void {
+  window.location.href = `${API_URL}/auth/google`;
+}
+
+export async function logout(): Promise<void> {
+  await apiRequest('/auth/logout', {
+    method: 'POST',
+  });
 }

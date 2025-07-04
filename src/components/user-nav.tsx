@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LogOut, User } from "lucide-react";
-import { useAuth } from "./auth-provider";
+import { useAuth } from "./auth-context";
 
 export function UserNav() {
   const { user, logout } = useAuth();
@@ -26,10 +26,14 @@ export function UserNav() {
         .toUpperCase()
     : "UN";
 
-  const handleLogout = () => {
-    logout();
-    // Opcional: redirecionar para home
-    window.location.href = "/";
+  const handleLogout = async () => {
+    try {
+      await logout();
+      // Opcional: redirecionar para home
+      window.location.href = "/";
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (

@@ -17,7 +17,7 @@ import {
   ExternalLink,
   Edit,
 } from "lucide-react";
-import { useAuth } from "@/components/auth-provider";
+import { useAuth } from "@/components/auth-context";
 import { useAddDocument } from "@/components/add-document-provider";
 import { useDocument } from "@/queries";
 

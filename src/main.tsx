@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryParamProvider } from "use-query-params";
 import { ReactRouter6Adapter } from "use-query-params/adapters/react-router-6";
 import { ThemeProvider } from "./components/theme-provider";
-import { AuthProvider } from "./components/auth-provider";
+import { AuthProvider } from "./components/auth-context";
 import { Toaster } from "./components/ui/toaster";
 import App from "./App.tsx";
 import "./index.css";

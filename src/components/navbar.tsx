@@ -1,11 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { UserNav } from "./user-nav";
-import { useAuth } from "./auth-provider";
+import { useAuth } from "./auth-context";
 import { SearchInput } from "./search-input";
 import { FilterButton } from "./filter-button";
 import { AddDocumentButton } from "./add-document-button";
+import { LoginButton } from "./login-button";
 import { Settings, BookOpen } from "lucide-react";
 
 export function Navbar() {
@@ -71,9 +71,7 @@ export function Navbar() {
                 <UserNav />
               </>
             ) : (
-              <Link to="/login">
-                <Button>Login</Button>
-              </Link>
+              <LoginButton variant="outline" size="sm" />
             )}
           </div>
         </div>
