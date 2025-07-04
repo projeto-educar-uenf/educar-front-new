@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
@@ -22,12 +22,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { X, Upload, Loader2 } from "lucide-react";
-import { uploadDocument } from "@/lib/api";
-import { CreateDocumentRequest } from "@/lib/types";
+import { uploadDocument, updateDocument } from "@/lib/api";
+import { CreateDocumentRequest, Document } from "@/lib/types";
 
 interface AddDocumentModalProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
+  editingDocument?: Document | null;
 }
 
 const DOCUMENT_TYPES = [
@@ -54,7 +55,11 @@ const RESEARCH_AREAS = [
   "Ciências Sociais",
 ];
 
-export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) {
+export function AddDocumentModal({
+  open,
+  onClose,
+  editingDocument = null,
+}: AddDocumentModalProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -70,6 +75,10 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
 
   const queryClient = useQueryClient();
 
+  // Determinar se está em modo de edição
+  const isEditing = editingDocument !== null;
+
+  // Mutation para upload de novo documento
   const uploadMutation = useMutation({
     mutationFn: uploadDocument,
     onSuccess: (response) => {
@@ -78,7 +87,7 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
           title: "Sucesso!",
           description: response.message,
         });
-        onOpenChange(false);
+        onClose();
         resetForm();
         // Invalidar queries para atualizar a lista
         queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
@@ -101,6 +110,53 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
     },
   });
 
+  // Mutation para atualizar documento existente
+  const updateMutation = useMutation({
+    mutationFn: ({ documentId, data }: { documentId: string; data: any }) =>
+      updateDocument(documentId, data),
+    onSuccess: () => {
+      toast({
+        title: "Sucesso!",
+        description: "Documento atualizado com sucesso!",
+      });
+      onClose();
+      resetForm();
+      // Invalidar queries para atualizar a lista
+      queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ["documents"] });
+      queryClient.invalidateQueries({
+        queryKey: ["document", editingDocument?.id],
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erro",
+        description: "Falha ao atualizar documento. Tente novamente.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // useEffect para preencher formulário quando estiver editando
+  useEffect(() => {
+    if (editingDocument) {
+      setFormData({
+        title: editingDocument.title,
+        description: editingDocument.description,
+        authors: editingDocument.authors,
+        documentType: editingDocument.documentType,
+        researchArea: editingDocument.researchArea,
+        keywords: editingDocument.keywords,
+      });
+      // Não definir arquivo porque é apenas para edição de metadados
+      setFile(null);
+    } else {
+      // Resetar form se não estiver editando
+      resetForm();
+    }
+  }, [editingDocument]);
+
   const resetForm = () => {
     setFormData({
       title: "",
@@ -117,12 +173,12 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validação completa dos campos obrigatórios
     const validationErrors: string[] = [];
 
-    // Validar arquivo
-    if (!file) {
+    // Validar arquivo (apenas obrigatório para novo upload, não para edição)
+    if (!isEditing && !file) {
       validationErrors.push("Arquivo é obrigatório");
     }
 
@@ -170,20 +226,39 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
       return;
     }
 
-    const uploadData: CreateDocumentRequest = {
-      ...formData,
-      file: file!, // Safe to use ! here because we validated file exists above
-    };
+    // Verificar permissões para edição
+    if (isEditing && editingDocument) {
+      // Fazer update do documento
+      const updateData = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        authors: formData.authors,
+        documentType: formData.documentType,
+        researchArea: formData.researchArea,
+        keywords: formData.keywords,
+      };
 
-    uploadMutation.mutate(uploadData);
+      updateMutation.mutate({
+        documentId: editingDocument.id,
+        data: updateData,
+      });
+    } else {
+      // Fazer upload de novo documento
+      const uploadData: CreateDocumentRequest = {
+        ...formData,
+        file: file!, // Safe to use ! here because we validated file exists above
+      };
+
+      uploadMutation.mutate(uploadData);
+    }
   };
 
   const addAuthor = () => {
     const trimmedAuthor = currentAuthor.trim();
     if (trimmedAuthor && !formData.authors.includes(trimmedAuthor)) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        authors: [...prev.authors, trimmedAuthor]
+        authors: [...prev.authors, trimmedAuthor],
       }));
       setCurrentAuthor("");
     } else if (!trimmedAuthor) {
@@ -202,18 +277,18 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
   };
 
   const removeAuthor = (author: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      authors: prev.authors.filter(a => a !== author)
+      authors: prev.authors.filter((a) => a !== author),
     }));
   };
 
   const addKeyword = () => {
     const trimmedKeyword = currentKeyword.trim();
     if (trimmedKeyword && !formData.keywords.includes(trimmedKeyword)) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        keywords: [...prev.keywords, trimmedKeyword]
+        keywords: [...prev.keywords, trimmedKeyword],
       }));
       setCurrentKeyword("");
     } else if (!trimmedKeyword) {
@@ -232,9 +307,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
   };
 
   const removeKeyword = (keyword: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      keywords: prev.keywords.filter(k => k !== keyword)
+      keywords: prev.keywords.filter((k) => k !== keyword),
     }));
   };
 
@@ -252,7 +327,7 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     const files = e.dataTransfer.files;
     if (files && files[0]) {
       setFile(files[0]);
@@ -275,83 +350,114 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
-            Adicionar Novo Documento
+            {isEditing ? "Editar Documento" : "Adicionar Novo Documento"}
           </DialogTitle>
           <DialogDescription>
-            Preencha as informações do documento e faça o upload do arquivo.
+            {isEditing
+              ? "Edite os metadados do documento. O arquivo não pode ser alterado."
+              : "Preencha as informações do documento e faça o upload do arquivo."}
             <br />
             <span className="text-sm text-muted-foreground">
-              * Campos obrigatórios: arquivo, título, descrição, tipo, área, autores e palavras-chave
+              * Campos obrigatórios: título, descrição, tipo, área, autores e
+              palavras-chave
+              {!isEditing && ", arquivo"}
             </span>
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Upload de Arquivo */}
+          {/* Upload de Arquivo ou Informações do Documento */}
           <div className="space-y-2">
-            <Label>Arquivo *</Label>
-            <div
-              className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-                dragActive 
-                  ? "border-primary bg-primary/5" 
-                  : file 
-                    ? "border-green-500 bg-green-50" 
-                    : "border-gray-300 hover:border-gray-400"
-              }`}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              {file ? (
+            <Label>{isEditing ? "Documento Atual" : "Arquivo *"}</Label>
+            {isEditing && editingDocument ? (
+              // Modo edição: mostrar informações do documento existente
+              <div className="border-2 border-solid rounded-lg p-6 bg-gray-50 dark:bg-gray-800">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-center gap-2 text-green-700">
+                  <div className="flex items-center gap-2 text-blue-700 dark:text-blue-400">
                     <Upload className="h-5 w-5" />
-                    <span className="font-medium">{file.name}</span>
+                    <span className="font-medium">
+                      {editingDocument.fileUrl.split("/").pop()}
+                    </span>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    {formatFileSize(file.size)}
+                    {formatFileSize(editingDocument.fileSize)} •{" "}
+                    {editingDocument.fileMimeType}
                   </p>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setFile(null)}
-                  >
-                    Remover
-                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    ℹ️ O arquivo não pode ser alterado. Apenas os metadados
+                    podem ser editados.
+                  </p>
                 </div>
-              ) : (
-                <div className="space-y-2">
-                  <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
-                  <div>
-                    <p className="font-medium">Arraste um arquivo aqui ou clique para selecionar</p>
+              </div>
+            ) : (
+              // Modo upload: área de drag & drop normal
+              <div
+                className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+                  dragActive
+                    ? "border-primary bg-primary/5"
+                    : file
+                      ? "border-green-500 bg-green-50"
+                      : "border-gray-300 hover:border-gray-400"
+                }`}
+                onDragEnter={handleDrag}
+                onDragLeave={handleDrag}
+                onDragOver={handleDrag}
+                onDrop={handleDrop}
+              >
+                {file ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center gap-2 text-green-700">
+                      <Upload className="h-5 w-5" />
+                      <span className="font-medium">{file.name}</span>
+                    </div>
                     <p className="text-sm text-muted-foreground">
-                      PDF, DOC, DOCX ou TXT (máx. 10MB)
+                      {formatFileSize(file.size)}
                     </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFile(null)}
+                    >
+                      Remover
+                    </Button>
                   </div>
-                  <input
-                    type="file"
-                    className="hidden"
-                    id="file-upload"
-                    accept=".pdf,.doc,.docx,.txt"
-                    onChange={handleFileInput}
-                  />
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => document.getElementById("file-upload")?.click()}
-                  >
-                    Selecionar Arquivo
-                  </Button>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div className="space-y-2">
+                    <Upload className="h-8 w-8 mx-auto text-muted-foreground" />
+                    <div>
+                      <p className="font-medium">
+                        Arraste um arquivo aqui ou clique para selecionar
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        PDF, DOC, DOCX ou TXT (máx. 10MB)
+                      </p>
+                    </div>
+                    <input
+                      type="file"
+                      className="hidden"
+                      id="file-upload"
+                      accept=".pdf,.doc,.docx,.txt"
+                      onChange={handleFileInput}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        document.getElementById("file-upload")?.click()
+                      }
+                    >
+                      Selecionar Arquivo
+                    </Button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Título */}
@@ -360,7 +466,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, title: e.target.value }))
+              }
               placeholder="Digite o título do documento"
               required
             />
@@ -375,7 +483,12 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
             <Textarea
               id="description"
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Descreva o conteúdo do documento"
               rows={3}
               required
@@ -391,7 +504,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
               <Label>Tipo de Documento *</Label>
               <Select
                 value={formData.documentType}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, documentType: value }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, documentType: value }))
+                }
                 required
               >
                 <SelectTrigger>
@@ -411,7 +526,9 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
               <Label>Área de Pesquisa *</Label>
               <Select
                 value={formData.researchArea}
-                onValueChange={(value) => setFormData(prev => ({ ...prev, researchArea: value }))}
+                onValueChange={(value) =>
+                  setFormData((prev) => ({ ...prev, researchArea: value }))
+                }
                 required
               >
                 <SelectTrigger>
@@ -436,20 +553,28 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
                 value={currentAuthor}
                 onChange={(e) => setCurrentAuthor(e.target.value)}
                 placeholder="Nome do autor"
-                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addAuthor())}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addAuthor())
+                }
               />
               <Button type="button" variant="outline" onClick={addAuthor}>
                 +
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Adicione pelo menos um autor. Pressione Enter ou clique em + para adicionar. 
-              ({formData.authors.length} autor{formData.authors.length !== 1 ? 'es' : ''} adicionado{formData.authors.length !== 1 ? 's' : ''})
+              Adicione pelo menos um autor. Pressione Enter ou clique em + para
+              adicionar. ({formData.authors.length} autor
+              {formData.authors.length !== 1 ? "es" : ""} adicionado
+              {formData.authors.length !== 1 ? "s" : ""})
             </p>
             {formData.authors.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.authors.map((author) => (
-                  <Badge key={author} variant="secondary" className="flex items-center gap-1">
+                  <Badge
+                    key={author}
+                    variant="secondary"
+                    className="flex items-center gap-1"
+                  >
                     {author}
                     <X
                       className="h-3 w-3 cursor-pointer hover:text-destructive"
@@ -469,20 +594,28 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
                 value={currentKeyword}
                 onChange={(e) => setCurrentKeyword(e.target.value)}
                 placeholder="Palavra-chave"
-                onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addKeyword())}
+                onKeyPress={(e) =>
+                  e.key === "Enter" && (e.preventDefault(), addKeyword())
+                }
               />
               <Button type="button" variant="outline" onClick={addKeyword}>
                 +
               </Button>
             </div>
             <p className="text-xs text-muted-foreground">
-              Adicione pelo menos uma palavra-chave. Pressione Enter ou clique em + para adicionar.
-              ({formData.keywords.length} palavra{formData.keywords.length !== 1 ? 's' : ''}-chave adicionada{formData.keywords.length !== 1 ? 's' : ''})
+              Adicione pelo menos uma palavra-chave. Pressione Enter ou clique
+              em + para adicionar. ({formData.keywords.length} palavra
+              {formData.keywords.length !== 1 ? "s" : ""}-chave adicionada
+              {formData.keywords.length !== 1 ? "s" : ""})
             </p>
             {formData.keywords.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {formData.keywords.map((keyword) => (
-                  <Badge key={keyword} variant="outline" className="flex items-center gap-1">
+                  <Badge
+                    key={keyword}
+                    variant="outline"
+                    className="flex items-center gap-1"
+                  >
                     {keyword}
                     <X
                       className="h-3 w-3 cursor-pointer hover:text-destructive"
@@ -498,21 +631,26 @@ export function AddDocumentModal({ open, onOpenChange }: AddDocumentModalProps) 
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
-              disabled={uploadMutation.isPending}
+              onClick={() => onClose()}
+              disabled={uploadMutation.isPending || updateMutation.isPending}
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={uploadMutation.isPending}>
-              {uploadMutation.isPending ? (
+            <Button
+              type="submit"
+              disabled={uploadMutation.isPending || updateMutation.isPending}
+            >
+              {(
+                isEditing ? updateMutation.isPending : uploadMutation.isPending
+              ) ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enviando...
+                  {isEditing ? "Atualizando..." : "Enviando..."}
                 </>
               ) : (
                 <>
                   <Upload className="mr-2 h-4 w-4" />
-                  Enviar Documento
+                  {isEditing ? "Atualizar Documento" : "Enviar Documento"}
                 </>
               )}
             </Button>

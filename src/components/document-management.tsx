@@ -34,12 +34,14 @@ import { toast } from "@/components/ui/use-toast";
 import { Link } from "react-router-dom";
 import { fetchDocuments, deleteDocument, getAdminStats } from "@/lib/api";
 import useDebounce from "@/hooks/useDebounce";
+import { useAddDocument } from "@/components/add-document-provider";
 
 
 export function DocumentManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const queryClient = useQueryClient();
+  const { openEditModal } = useAddDocument();
 
   // Query para buscar documentos
   const { data: documentsData, isLoading: documentsLoading } = useQuery({
@@ -213,12 +215,11 @@ export function DocumentManagement() {
                             variant="ghost"
                             size="icon"
                             title="Editar documento"
-                            disabled={true}
+                            onClick={() => openEditModal(doc)}
                           >
                             <Edit className="h-4 w-4" />
                             <span className="sr-only">Editar</span>
                           </Button>
-                          {/* TODO: Implementar edição de documentos */}
 
                           <AlertDialog>
                             <AlertDialogTrigger asChild>

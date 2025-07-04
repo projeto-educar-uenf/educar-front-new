@@ -16,11 +16,16 @@ import {
   Tag,
   Users,
   ExternalLink,
+  Edit,
 } from "lucide-react";
+import { useAuth } from "@/components/auth-provider";
+import { useAddDocument } from "@/components/add-document-provider";
 
 export function DocumentDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { openEditModal } = useAddDocument();
 
   const {
     data: document,
@@ -31,6 +36,15 @@ export function DocumentDetailPage() {
     queryFn: () => fetchDocumentById(id!),
     enabled: !!id,
   });
+
+  // Verificar se o usuário pode editar este documento
+  const canEdit = document && (user?.role === "ADMIN" || user?.id === document.createdBy.id);
+
+  const handleEdit = () => {
+    if (document) {
+      openEditModal(document);
+    }
+  };
 
   const handleDownload = () => {
     if (!document) return;
@@ -151,10 +165,12 @@ export function DocumentDetailPage() {
             <Badge variant="secondary">{document.researchArea}</Badge>
           </div>
 
-          <Button onClick={handleDownload} size="lg" className="mb-6">
-            <Download className="mr-2 h-4 w-4" />
-            Download ({formatFileSize(document.fileSize)})
-          </Button>
+          <div className="flex gap-3 mb-6">
+            <Button onClick={handleDownload} size="lg">
+              <Download className="mr-2 h-4 w-4" />
+              Download ({formatFileSize(document.fileSize)})
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -322,6 +338,17 @@ export function DocumentDetailPage() {
                     ? "Visualizar Online" 
                     : "Visualização não disponível"}
                 </Button>
+
+                {canEdit && (
+                  <Button
+                    onClick={handleEdit}
+                    className="w-full"
+                    variant="outline"
+                  >
+                    <Edit className="mr-2 h-4 w-4" />
+                    Editar Documento
+                  </Button>
+                )}
               </CardContent>
             </Card>
           </div>
