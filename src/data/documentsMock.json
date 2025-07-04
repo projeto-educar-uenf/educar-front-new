@@ -1,0 +1,281 @@
+[
+  {
+    "id": "1",
+    "title": "Análise de Qualidade da Água no Norte Fluminense",
+    "description": "Estudo detalhado sobre a qualidade da água em municípios do norte do estado do Rio de Janeiro, com foco em indicadores de potabilidade e contaminação.",
+    "authors": ["Dr. João Silva", "Dra. Maria Santos", "Dr. Carlos Oliveira"],
+    "publicationDate": "2023-06-15",
+    "documentType": "Artigo Científico",
+    "researchArea": "Ciências Ambientais",
+    "keywords": [
+      "água",
+      "qualidade",
+      "norte fluminense",
+      "contaminação",
+      "potabilidade"
+    ],
+    "fileUrl": "/uploads/analise-agua-nf.pdf",
+    "fileSize": 2458672,
+    "fileMimeType": "application/pdf",
+    "viewCount": 234,
+    "downloadCount": 89,
+    "createdBy": {
+      "id": "user1",
+      "name": "Dr. João Silva",
+      "email": "joao.silva@uenf.br",
+      "image": "/placeholder-user.jpg"
+    },
+    "createdAt": "2023-06-15T10:30:00Z",
+    "updatedAt": "2023-06-15T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "title": "Desenvolvimento de Tecnologias Sustentáveis para Agricultura",
+    "description": "Pesquisa sobre implementação de tecnologias sustentáveis na agricultura familiar da região norte fluminense.",
+    "authors": ["Dra. Ana Costa", "Dr. Pedro Ferreira"],
+    "publicationDate": "2023-05-20",
+    "documentType": "Dissertação",
+    "researchArea": "Agricultura Sustentável",
+    "keywords": [
+      "agricultura",
+      "sustentabilidade",
+      "tecnologia",
+      "agricultura familiar"
+    ],
+    "fileUrl": "/uploads/tech-sustentavel-agri.pdf",
+    "fileSize": 3890245,
+    "fileMimeType": "application/pdf",
+    "viewCount": 156,
+    "downloadCount": 67,
+    "createdBy": {
+      "id": "user2",
+      "name": "Dra. Ana Costa",
+      "email": "ana.costa@uenf.br",
+      "image": "/placeholder-user.jpg"
+    },
+    "createdAt": "2023-05-20T14:15:00Z",
+    "updatedAt": "2023-05-20T14:15:00Z"
+  },
+  {
+    "id": "3",
+    "title": "Estudo Geológico da Bacia de Campos",
+    "description": "Análise geológica detalhada da formação e estrutura da Bacia de Campos, com implications para exploração de recursos naturais.",
+    "authors": ["Dr. Roberto Dias", "Dra. Luciana Alves", "Dr. Marcos Rocha"],
+    "publicationDate": "2023-04-10",
+    "documentType": "Tese",
+    "researchArea": "Geologia",
+    "keywords": ["geologia", "bacia de campos", "estrutura", "recursos naturais"],
+    "fileUrl": "/uploads/estudo-geologico-bc.pdf",
+    "fileSize": 4567890,
+    "fileMimeType": "application/pdf",
+    "viewCount": 198,
+    "downloadCount": 45,
+    "createdBy": {
+      "id": "user3",
+      "name": "Dr. Roberto Dias",
+      "email": "roberto.dias@uenf.br"
+    },
+    "createdAt": "2023-04-10T09:45:00Z",
+    "updatedAt": "2023-04-10T09:45:00Z"
+  },
+  {
+    "id": "4",
+    "title": "Impacto das Mudanças Climáticas na Biodiversidade Local",
+    "description": "Estudo sobre os efeitos das mudanças climáticas na fauna e flora da região norte fluminense.",
+    "authors": ["Dra. Cristina Lima", "Dr. Fernando Souza"],
+    "publicationDate": "2023-03-25",
+    "documentType": "Relatório de Pesquisa",
+    "researchArea": "Biodiversidade",
+    "keywords": [
+      "mudanças climáticas",
+      "biodiversidade",
+      "fauna",
+      "flora",
+      "norte fluminense"
+    ],
+    "fileUrl": "/uploads/mudancas-climaticas-bio.pdf",
+    "fileSize": 1876543,
+    "fileMimeType": "application/pdf",
+    "viewCount": 289,
+    "downloadCount": 112,
+    "createdBy": {
+      "id": "user4",
+      "name": "Dra. Cristina Lima",
+      "email": "cristina.lima@uenf.br"
+    },
+    "createdAt": "2023-03-25T16:20:00Z",
+    "updatedAt": "2023-03-25T16:20:00Z"
+  },
+  {
+    "id": "5",
+    "title": "Inovações em Engenharia de Petróleo e Gás",
+    "description": "Pesquisa sobre novas tecnologias e metodologias para extração e processamento de petróleo e gás natural.",
+    "authors": [
+      "Dr. Eduardo Santos",
+      "Dra. Patricia Mendes",
+      "Dr. Gabriel Torres"
+    ],
+    "publicationDate": "2023-02-14",
+    "documentType": "Artigo Científico",
+    "researchArea": "Engenharia de Petróleo",
+    "keywords": [
+      "petróleo",
+      "gás natural",
+      "extração",
+      "processamento",
+      "inovação"
+    ],
+    "fileUrl": "/uploads/inovacoes-petroleo-gas.pdf",
+    "fileSize": 3234567,
+    "fileMimeType": "application/pdf",
+    "viewCount": 167,
+    "downloadCount": 78,
+    "createdBy": {
+      "id": "user5",
+      "name": "Dr. Eduardo Santos",
+      "email": "eduardo.santos@uenf.br"
+    },
+    "createdAt": "2023-02-14T11:10:00Z",
+    "updatedAt": "2023-02-14T11:10:00Z"
+  },
+  {
+    "id": "6",
+    "title": "Desenvolvimento de Materiais Avançados",
+    "description": "Estudo sobre síntese e caracterização de novos materiais com propriedades específicas para aplicações industriais.",
+    "authors": ["Dr. André Silva", "Dra. Fernanda Costa"],
+    "publicationDate": "2023-01-30",
+    "documentType": "Dissertação",
+    "researchArea": "Ciência dos Materiais",
+    "keywords": [
+      "materiais avançados",
+      "síntese",
+      "caracterização",
+      "propriedades",
+      "aplicações industriais"
+    ],
+    "fileUrl": "/uploads/materiais-avancados.pdf",
+    "fileSize": 2987654,
+    "fileMimeType": "application/pdf",
+    "viewCount": 145,
+    "downloadCount": 56,
+    "createdBy": {
+      "id": "user6",
+      "name": "Dr. André Silva",
+      "email": "andre.silva@uenf.br"
+    },
+    "createdAt": "2023-01-30T13:45:00Z",
+    "updatedAt": "2023-01-30T13:45:00Z"
+  },
+  {
+    "id": "7",
+    "title": "Análise de Redes de Distribuição de Energia Elétrica",
+    "description": "Estudo sobre otimização e modernização das redes de distribuição de energia elétrica em áreas urbanas e rurais.",
+    "authors": ["Dr. Carlos Mendes", "Dra. Beatriz Santos"],
+    "publicationDate": "2023-01-15",
+    "documentType": "Artigo Científico",
+    "researchArea": "Engenharia Elétrica",
+    "keywords": [
+      "energia elétrica",
+      "distribuição",
+      "otimização",
+      "modernização",
+      "redes"
+    ],
+    "fileUrl": "/uploads/redes-energia-eletrica.pdf",
+    "fileSize": 2123456,
+    "fileMimeType": "application/pdf",
+    "viewCount": 176,
+    "downloadCount": 64,
+    "createdBy": {
+      "id": "user7",
+      "name": "Dr. Carlos Mendes",
+      "email": "carlos.mendes@uenf.br"
+    },
+    "createdAt": "2023-01-15T08:30:00Z",
+    "updatedAt": "2023-01-15T08:30:00Z"
+  },
+  {
+    "id": "8",
+    "title": "Biotecnologia Aplicada à Medicina",
+    "description": "Pesquisa sobre desenvolvimento de novos tratamentos médicos utilizando técnicas biotecnológicas avançadas.",
+    "authors": ["Dra. Mariana Ferreira", "Dr. Lucas Oliveira"],
+    "publicationDate": "2022-12-20",
+    "documentType": "Tese",
+    "researchArea": "Biotecnologia",
+    "keywords": [
+      "biotecnologia",
+      "medicina",
+      "tratamentos",
+      "técnicas avançadas",
+      "saúde"
+    ],
+    "fileUrl": "/uploads/biotecnologia-medicina.pdf",
+    "fileSize": 3567890,
+    "fileMimeType": "application/pdf",
+    "viewCount": 298,
+    "downloadCount": 127,
+    "createdBy": {
+      "id": "user8",
+      "name": "Dra. Mariana Ferreira",
+      "email": "mariana.ferreira@uenf.br"
+    },
+    "createdAt": "2022-12-20T15:45:00Z",
+    "updatedAt": "2022-12-20T15:45:00Z"
+  },
+  {
+    "id": "9",
+    "title": "Sistemas de Informação Geográfica para Gestão Urbana",
+    "description": "Aplicação de tecnologias GIS na gestão e planejamento urbano de cidades de médio porte.",
+    "authors": ["Dr. Rafael Costa", "Dra. Amanda Silva"],
+    "publicationDate": "2022-11-30",
+    "documentType": "Dissertação",
+    "researchArea": "Tecnologia da Informação",
+    "keywords": [
+      "GIS",
+      "gestão urbana",
+      "planejamento",
+      "tecnologia",
+      "cidades"
+    ],
+    "fileUrl": "/uploads/gis-gestao-urbana.pdf",
+    "fileSize": 2789012,
+    "fileMimeType": "application/pdf",
+    "viewCount": 203,
+    "downloadCount": 89,
+    "createdBy": {
+      "id": "user9",
+      "name": "Dr. Rafael Costa",
+      "email": "rafael.costa@uenf.br"
+    },
+    "createdAt": "2022-11-30T12:15:00Z",
+    "updatedAt": "2022-11-30T12:15:00Z"
+  },
+  {
+    "id": "10",
+    "title": "Química Verde e Sustentabilidade Industrial",
+    "description": "Estudo sobre implementação de processos químicos sustentáveis na indústria brasileira.",
+    "authors": ["Dra. Patricia Alves", "Dr. Rodrigo Lima"],
+    "publicationDate": "2022-10-15",
+    "documentType": "Relatório de Pesquisa",
+    "researchArea": "Química",
+    "keywords": [
+      "química verde",
+      "sustentabilidade",
+      "indústria",
+      "processos químicos",
+      "meio ambiente"
+    ],
+    "fileUrl": "/uploads/quimica-verde-sustentabilidade.pdf",
+    "fileSize": 1987654,
+    "fileMimeType": "application/pdf",
+    "viewCount": 167,
+    "downloadCount": 73,
+    "createdBy": {
+      "id": "user10",
+      "name": "Dra. Patricia Alves",
+      "email": "patricia.alves@uenf.br"
+    },
+    "createdAt": "2022-10-15T09:20:00Z",
+    "updatedAt": "2022-10-15T09:20:00Z"
+  }
+]

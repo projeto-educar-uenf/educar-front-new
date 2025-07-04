@@ -1,6 +1,5 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
-import { fetchDocumentById, canPreviewDocument, openDocumentPreview } from "@/lib/api";
+import { canPreviewDocument, openDocumentPreview } from "@/api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/components/auth-provider";
 import { useAddDocument } from "@/components/add-document-provider";
+import { useDocument } from "@/queries";
 
 export function DocumentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -31,11 +31,7 @@ export function DocumentDetailPage() {
     data: document,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["document", id],
-    queryFn: () => fetchDocumentById(id!),
-    enabled: !!id,
-  });
+  } = useDocument(id!);
 
   // Verificar se o usuário pode editar este documento
   const canEdit = document && (user?.role === "ADMIN" || user?.id === document.createdBy.id);
@@ -331,10 +327,10 @@ export function DocumentDetailPage() {
                   onClick={() => openDocumentPreview(document)}
                   className="w-full"
                   variant="outline"
-                  disabled={!canPreviewDocument(document.fileMimeType)}
+                  disabled={!canPreviewDocument(document)}
                 >
                   <ExternalLink className="mr-2 h-4 w-4" />
-                  {canPreviewDocument(document.fileMimeType) 
+                  {canPreviewDocument(document) 
                     ? "Visualizar Online" 
                     : "Visualização não disponível"}
                 </Button>

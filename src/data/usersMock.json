@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1",
+    "name": "João Silva",
+    "email": "joao.silva@uenf.br",
+    "role": "ADMIN",
+    "image": "https://github.com/shadcn.png",
+    "documentCount": 15,
+    "createdAt": "2023-01-15T10:30:00Z"
+  },
+  {
+    "id": "2",
+    "name": "Maria Santos",
+    "email": "maria.santos@uenf.br",
+    "role": "ADMIN",
+    "image": "https://github.com/vercel.png",
+    "documentCount": 8,
+    "createdAt": "2023-02-20T14:15:00Z"
+  },
+  {
+    "id": "3",
+    "name": "Carlos Oliveira",
+    "email": "carlos.oliveira@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/carlos",
+    "documentCount": 3,
+    "createdAt": "2023-03-10T09:45:00Z"
+  },
+  {
+    "id": "4",
+    "name": "Ana Costa",
+    "email": "ana.costa@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/ana",
+    "documentCount": 7,
+    "createdAt": "2023-04-05T16:20:00Z"
+  },
+  {
+    "id": "5",
+    "name": "Pedro Almeida",
+    "email": "pedro.almeida@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/pedro",
+    "documentCount": 12,
+    "createdAt": "2023-05-12T11:30:00Z"
+  },
+  {
+    "id": "6",
+    "name": "André Silva",
+    "email": "andre.silva@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/andre",
+    "documentCount": 9,
+    "createdAt": "2023-06-08T13:20:00Z"
+  },
+  {
+    "id": "7",
+    "name": "Carlos Mendes",
+    "email": "carlos.mendes@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/carlos-mendes",
+    "documentCount": 6,
+    "createdAt": "2023-07-02T16:45:00Z"
+  },
+  {
+    "id": "8",
+    "name": "Mariana Ferreira",
+    "email": "mariana.ferreira@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/mariana",
+    "documentCount": 11,
+    "createdAt": "2023-08-15T11:10:00Z"
+  },
+  {
+    "id": "9",
+    "name": "Rafael Costa",
+    "email": "rafael.costa@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/rafael",
+    "documentCount": 4,
+    "createdAt": "2023-09-22T14:30:00Z"
+  },
+  {
+    "id": "10",
+    "name": "Patricia Alves",
+    "email": "patricia.alves@uenf.br",
+    "role": "USER",
+    "image": "https://avatar.vercel.sh/patricia",
+    "documentCount": 5,
+    "createdAt": "2023-10-18T09:15:00Z"
+  }
+]

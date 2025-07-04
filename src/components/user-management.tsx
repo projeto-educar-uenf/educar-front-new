@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -21,55 +20,24 @@ import {
 import { Search, Loader2 } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import { useAuth } from "@/components/auth-provider";
-import { fetchUsers, updateUser, getAdminStats } from "@/lib/api";
+import { useUsers } from "../queries";
+import { useAdminStats } from "../queries";
+import { useUpdateUser } from "@/mutations";
 import useDebounce from "@/hooks/useDebounce";
 
 export function UserManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const { user: currentUser } = useAuth();
-  const queryClient = useQueryClient();
 
   // Query para buscar usuários
-  const { data: usersData, isLoading: usersLoading } = useQuery({
-    queryKey: ["admin-users", debouncedSearchQuery],
-    queryFn: () => fetchUsers(debouncedSearchQuery),
-    staleTime: 30000,
-  });
+  const { data: usersData, isLoading: usersLoading } = useUsers(debouncedSearchQuery);
 
   // Query para estatísticas
-  const { data: stats } = useQuery({
-    queryKey: ["admin-stats"],
-    queryFn: getAdminStats,
-    staleTime: 60000,
-  });
+  const { data: stats } = useAdminStats();
 
   // Mutation para atualizar permissões de usuário
-  const updateUserMutation = useMutation({
-    mutationFn: ({
-      userId,
-      updates,
-    }: {
-      userId: string;
-      updates: { role: "USER" | "ADMIN" };
-    }) => updateUser(userId, updates),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      toast({
-        title: "Permissão atualizada",
-        description: "As permissões do usuário foram atualizadas com sucesso.",
-      });
-    },
-    onError: (error) => {
-      console.error("Erro:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível atualizar as permissões do usuário.",
-        variant: "destructive",
-      });
-    },
-  });
+  const updateUserMutation = useUpdateUser();
 
   const handleToggleAdmin = async (userId: string, newValue: boolean) => {
     // Impedir que o usuário remova seus próprios privilégios de admin

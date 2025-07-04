@@ -47,11 +47,24 @@ educar/ (Next.js - ORIGEM)          educar-new/ (Vite + React - DESTINO)
 - **Estados**: Loading, error handling, empty states
 - **Responsivo**: Mobile-first com drawer para filtros
 
+#### 🏗️ Arquitetura
+
+- **Mutations**: Organizadas em `src/mutations/` com callbacks reutilizáveis
+- **Queries**: Organizadas em `src/queries/` com hooks customizados
+- **Separação**: APIs só em `src/api.ts`, componentes só importam hooks
+- **Reutilização**: Mutations com callbacks para diferentes contextos
+
 ### APIs Mock Implementadas
+
 ```typescript
-// Todas funcionais com TanStack Query
-fetchDocuments, fetchUsers, uploadDocument, updateDocument, 
-deleteDocument, updateUser, getAdminStats
+// Todas organizadas com TanStack Query
+// src/queries/ - Para busca de dados
+fetchDocuments, fetchUsers, fetchDocumentById, getAdminStats, getFilterStats
+
+// src/mutations/ - Para modificação de dados  
+uploadDocument, updateDocument, deleteDocument, updateUser
+
+// Arquitetura limpa: componentes apenas importam hooks organizados
 ```
 
 ## 🚀 Como Usar
@@ -65,9 +78,9 @@ bun run build      # produção
 
 ## 🎯 Próximos Passos
 
-1. **Reorganização das Requisições**: Centralizar todas as chamadas de API em uma única pasta
-2. **APIs Reais**: Conectar com backend real
-3. **Google OAuth**: Substituir autenticação mock
+1. **APIs Reais**: Conectar com backend real (arquitetura já preparada)
+2. **Google OAuth**: Substituir autenticação mock
+3. **Testes**: Adicionar testes unitários para mutations e queries
 
 ## ⚠️ Pontos de Atenção
 

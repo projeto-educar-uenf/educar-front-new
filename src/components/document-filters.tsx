@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -11,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, Search } from "lucide-react";
-import { getFilterStats } from "@/lib/api";
+import { useFilterStats } from "@/queries";
 import useFilters, { RESET_FILTERS } from "@/hooks/useFilters";
 
 interface DocumentFiltersProps {
@@ -22,11 +21,7 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
   const [filters, setFilters] = useFilters();
 
   // Buscar estatísticas de filtros com contadores
-  const { data: filterStats } = useQuery({
-    queryKey: ["filterStats"],
-    queryFn: getFilterStats,
-    staleTime: Infinity, // Dados estáticos, não precisam revalidar
-  });
+  const { data: filterStats } = useFilterStats();
 
   const hasActiveFilters =
     filters.documentType || filters.researchArea || filters.author;
@@ -53,8 +48,8 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
             <SelectContent>
               <SelectItem value="all">Todos os tipos</SelectItem>
               {filterStats?.documentTypes.map((type) => (
-                <SelectItem key={type.name} value={type.name}>
-                  {type.name} ({type.count})
+                <SelectItem key={type} value={type}>
+                  {type}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -79,8 +74,8 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
             <SelectContent>
               <SelectItem value="all">Todas as áreas</SelectItem>
               {filterStats?.researchAreas.map((area) => (
-                <SelectItem key={area.name} value={area.name}>
-                  {area.name} ({area.count})
+                <SelectItem key={area} value={area}>
+                  {area}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -167,8 +162,7 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
           </p>
           {filterStats && (
             <p>
-              Total: {filterStats.totalDocuments} documentos,{" "}
-              {filterStats.documentTypes.length} tipos,{" "}
+              Disponível: {filterStats.documentTypes.length} tipos,{" "}
               {filterStats.researchAreas.length} áreas de pesquisa.
             </p>
           )}

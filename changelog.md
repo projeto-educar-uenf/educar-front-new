@@ -5,6 +5,40 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [0.20.0] - 2024-03-XX
+
+### Adicionado
+
+- **Arquitetura de Requisições Completamente Refatorada**
+  - Todas as mutations centralizadas na pasta `src/mutations/`
+  - Todas as queries centralizadas na pasta `src/mutations/`
+  - Mutations com callbacks personalizados para reutilização
+  - Query para estatísticas de filtros (`useFilterStats`)
+  - Exportação organizada via `src/queries/index.ts` e `src/mutations/index.ts`
+
+### Modificado
+
+- **Componentes Refatorados para Usar Arquitetura Organizada**
+  - `AddDocumentModal`: removidas mutations inline, agora usa `useCreateDocumentWithCallbacks` e `useUpdateDocumentWithCallbacks`
+  - `DocumentDetailPage`: removida query inline, agora usa `useDocument` da pasta queries
+  - `DocumentFilters`: removida query inline, agora usa `useFilterStats`
+  
+### Removido
+
+- **Mutations e Queries Inline em Componentes**
+  - Todas as `useMutation` e `useQuery` criadas diretamente em componentes foram removidas
+  - Hook deprecado `src/hooks/use-documents.tsx` removido
+  - Imports diretos de funções da API removidos dos componentes
+
+### Melhorado
+
+- **Separação de Responsabilidades**
+  - APIs apenas em `src/api.ts`
+  - Mutations apenas em `src/mutations/`
+  - Queries apenas em `src/queries/`
+  - Componentes apenas importam hooks organizados
+  - Reutilização de código através de mutations com callbacks
+
 ## [0.19.0] - 2024-03-XX
 
 ### Adicionado

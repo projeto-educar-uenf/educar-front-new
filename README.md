@@ -96,6 +96,8 @@ educar-new/
 │   │   ├── ui/        # Componentes base (shadcn/ui)
 │   │   └── features/  # Componentes de funcionalidades
 │   ├── pages/         # Páginas da aplicação
+│   ├── queries/       # React Query hooks para busca
+│   ├── mutations/     # React Query hooks para modificação
 │   ├── lib/           # Utilitários e helpers
 │   ├── hooks/         # Custom React hooks
 │   ├── providers/     # Context providers

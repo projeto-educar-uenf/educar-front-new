@@ -1,5 +1,32 @@
 # Funcionalidades do Sistema - Projeto Educar UENF
 
+## 🏗️ Arquitetura de Dados
+
+### Sistema de Requisições Organizado
+
+- **Mutations** (`src/mutations/`):
+  - `useCreateDocument()` - Upload de novos documentos
+  - `useUpdateDocument()` - Atualização de metadados
+  - `useDeleteDocument()` - Remoção de documentos
+  - `useUpdateUser()` - Gestão de permissões de usuários
+  - Mutations com callbacks personalizados para reutilização
+  - Invalidação automática de queries relacionadas
+
+- **Queries** (`src/queries/`):
+  - `useDocuments()` - Listagem com filtros e paginação
+  - `useDocument(id)` - Busca individual de documento
+  - `useAdminDocuments()` - Listagem para administração
+  - `useUsers()` - Gestão de usuários
+  - `useAdminStats()` - Dashboard de estatísticas
+  - `useFilterStats()` - Contadores para filtros
+
+### Separação de Responsabilidades
+
+- **API Layer** (`src/api.ts`): Funções puras de requisição HTTP
+- **Query Layer** (`src/queries/`): Hooks de busca com cache e estados
+- **Mutation Layer** (`src/mutations/`): Hooks de modificação com invalidação
+- **Component Layer**: Apenas importa e usa hooks organizados
+
 ## 🔐 Autenticação e Autorização
 
 ### Login via Google OAuth

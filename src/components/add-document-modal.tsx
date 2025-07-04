@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
@@ -22,8 +21,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/use-toast";
 import { X, Upload, Loader2 } from "lucide-react";
-import { uploadDocument, updateDocument } from "@/lib/api";
 import { CreateDocumentRequest, Document } from "@/lib/types";
+import { 
+  useCreateDocumentWithCallbacks, 
+  useUpdateDocumentWithCallbacks 
+} from "@/mutations";
 
 interface AddDocumentModalProps {
   open: boolean;
@@ -73,14 +75,11 @@ export function AddDocumentModal({
   const [currentKeyword, setCurrentKeyword] = useState("");
   const [dragActive, setDragActive] = useState(false);
 
-  const queryClient = useQueryClient();
-
   // Determinar se está em modo de edição
   const isEditing = editingDocument !== null;
 
-  // Mutation para upload de novo documento
-  const uploadMutation = useMutation({
-    mutationFn: uploadDocument,
+  // Mutations organizadas com callbacks personalizados
+  const uploadMutation = useCreateDocumentWithCallbacks({
     onSuccess: (response) => {
       if (response.success) {
         toast({
@@ -89,10 +88,6 @@ export function AddDocumentModal({
         });
         onClose();
         resetForm();
-        // Invalidar queries para atualizar a lista
-        queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
-        queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-        queryClient.invalidateQueries({ queryKey: ["documents"] }); // Lista principal de documentos
       } else {
         toast({
           title: "Erro no upload",
@@ -110,10 +105,7 @@ export function AddDocumentModal({
     },
   });
 
-  // Mutation para atualizar documento existente
-  const updateMutation = useMutation({
-    mutationFn: ({ documentId, data }: { documentId: string; data: any }) =>
-      updateDocument(documentId, data),
+  const updateMutation = useUpdateDocumentWithCallbacks({
     onSuccess: () => {
       toast({
         title: "Sucesso!",
@@ -121,13 +113,6 @@ export function AddDocumentModal({
       });
       onClose();
       resetForm();
-      // Invalidar queries para atualizar a lista
-      queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
-      queryClient.invalidateQueries({
-        queryKey: ["document", editingDocument?.id],
-      });
     },
     onError: () => {
       toast({

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
   TableBody,
@@ -30,62 +29,26 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Search, Edit, Trash2, Eye, Loader2 } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
 import { Link } from "react-router-dom";
-import { fetchDocuments, deleteDocument, getAdminStats } from "@/lib/api";
-import useDebounce from "@/hooks/useDebounce";
 import { useAddDocument } from "@/components/add-document-provider";
+import { useAdminDocuments, useAdminStats } from "../queries";
+import { useDeleteDocument } from "@/mutations";
+import useDebounce from "@/hooks/useDebounce";
 
 
 export function DocumentManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
-  const queryClient = useQueryClient();
   const { openEditModal } = useAddDocument();
 
   // Query para buscar documentos
-  const { data: documentsData, isLoading: documentsLoading } = useQuery({
-    queryKey: ["admin-documents", debouncedSearchQuery],
-    queryFn: () =>
-      fetchDocuments({
-        q: debouncedSearchQuery,
-        page: 1,
-        documentType: undefined,
-        researchArea: undefined,
-        author: undefined,
-        limit: 20,
-      }),
-    staleTime: 30000,
-  });
+  const { data: documentsData, isLoading: documentsLoading } = useAdminDocuments(debouncedSearchQuery);
 
   // Query para estatísticas
-  const { data: stats } = useQuery({
-    queryKey: ["admin-stats"],
-    queryFn: getAdminStats,
-    staleTime: 60000,
-  });
+  const { data: stats } = useAdminStats();
 
   // Mutation para deletar documento
-  const deleteDocumentMutation = useMutation({
-    mutationFn: deleteDocument,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-documents"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      queryClient.invalidateQueries({ queryKey: ["documents"] }); // Invalidar lista geral também
-      toast({
-        title: "Documento excluído",
-        description: "O documento foi excluído com sucesso.",
-      });
-    },
-    onError: (error) => {
-      console.error("Erro:", error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível excluir o documento.",
-        variant: "destructive",
-      });
-    },
-  });
+  const deleteDocumentMutation = useDeleteDocument();
 
   const handleDeleteDocument = async (documentId: string) => {
     deleteDocumentMutation.mutate(documentId);

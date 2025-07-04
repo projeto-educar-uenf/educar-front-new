@@ -2,7 +2,7 @@ import { DocumentCard } from "./document-card";
 import { Pagination } from "./ui/pagination";
 import { Button } from "./ui/button";
 import { Search, Loader2 } from "lucide-react";
-import { useDocuments } from "@/hooks/use-documents";
+import { useDocuments } from "@/queries";
 import useFilters, { RESET_FILTERS } from "@/hooks/useFilters";
 
 export function DocumentList() {
