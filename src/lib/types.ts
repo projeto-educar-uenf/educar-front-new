@@ -49,7 +49,7 @@ export interface User {
   role: "USER" | "ADMIN";
   documentCount: number;
   createdAt: string;
-  image?: string;
+  avatar?: string;
 }
 
 export interface UsersResponse {
