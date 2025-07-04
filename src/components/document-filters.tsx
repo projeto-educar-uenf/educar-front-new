@@ -47,7 +47,7 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos os tipos</SelectItem>
-              {filterStats?.documentTypes.map((type) => (
+              {filterStats?.documentTypes.map((type: string) => (
                 <SelectItem key={type} value={type}>
                   {type}
                 </SelectItem>
@@ -73,7 +73,7 @@ export function DocumentFilters({ className }: DocumentFiltersProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todas as áreas</SelectItem>
-              {filterStats?.researchAreas.map((area) => (
+              {filterStats?.researchAreas.map((area: string) => (
                 <SelectItem key={area} value={area}>
                   {area}
                 </SelectItem>
