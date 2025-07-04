@@ -140,6 +140,18 @@ educar-new/ (Vite + React - DESTINO)
    - **DocumentCard**: Botão "Preview" nos cards com 3 ações (Download/Preview/Detalhes)
    - **Blob URLs**: Documentos enviados geram URLs reais para teste de preview
 
+18. **✅ SISTEMA DE EDIÇÃO DE DOCUMENTOS FUNCIONAL**:
+   - **Modal Unificado**: AddDocumentModal adaptado para upload e edição
+     - Detecção automática do modo (upload vs edição)
+     - Pré-preenchimento de formulário com dados existentes
+     - Validação adaptada (arquivo não obrigatório na edição)
+     - UI contextual com títulos e botões dinâmicos
+   - **Controle de Permissões**: Apenas criador ou admin podem editar
+   - **API updateDocument**: Mock funcional para atualizar metadados
+   - **Botões Estratégicos**: DocumentCard, DocumentDetailPage e AdminPage
+   - **Preservação de Arquivo**: Apenas metadados são editáveis
+   - **Invalidação de Queries**: Atualização automática em todas as listas
+
 ## 🛠 **DETALHES TÉCNICOS DA IMPLEMENTAÇÃO**
 
 ### **🔧 Arquitetura do Sistema de Upload**
@@ -148,6 +160,14 @@ educar-new/ (Vite + React - DESTINO)
 1. AddDocumentButton (navbar) → 2. AddDocumentProvider (context) → 
 3. AddDocumentModal (formulário) → 4. uploadDocument API → 
 5. Blob URL creation → 6. Query invalidation → 7. UI update
+```
+
+### **✏️ Arquitetura do Sistema de Edição**
+```tsx
+// Fluxo completo de edição:
+1. Botão "Editar" (DocumentCard/DetailPage/Admin) → 2. AddDocumentProvider.openEditModal() → 
+3. AddDocumentModal (pré-preenchido) → 4. Validação de permissões → 
+5. updateDocument API → 6. Query invalidation → 7. UI update
 ```
 
 ### **📱 UX/UI Implementadas**
@@ -298,17 +318,18 @@ cd educar-new
 bun run dev  # verificar se ainda funciona
 ```
 
-**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação, Páginas Individuais de Documentos, Filtros Avançados e AdminPage 100% funcionais**.
+**Status atual**: ✅ Base configurada, **HomePage, LoginPage, ThemeProvider, Sistema de Autenticação, Páginas Individuais de Documentos, Filtros Avançados, AdminPage e Sistema de Edição de Documentos 100% funcionais**.
 
-## 🎯 **MIGRAÇÃO COMPLETAMENTE FUNCIONAL + SISTEMA DE UPLOAD E PREVIEW**
+## 🎯 **MIGRAÇÃO COMPLETAMENTE FUNCIONAL + SISTEMA DE UPLOAD, PREVIEW E EDIÇÃO**
 
 ### **🏆 MARCOS ALCANÇADOS:**
 A migração está **COMPLETA E EXPANDIDA** com funcionalidades avançadas:
 - ✅ **Autenticação mock** funcionando perfeitamente
-- ✅ **Gestão de documentos** completa (listagem, filtros, detalhes, upload, preview)
+- ✅ **Gestão completa de documentos** (listagem, filtros, detalhes, upload, preview, edição)
 - ✅ **Administração** completa (usuários, documentos, estatísticas)
 - ✅ **Sistema de Upload** global funcional com validações
 - ✅ **Preview de Documentos** inline com blob URLs reais
+- ✅ **Sistema de Edição** com controle de permissões e modal unificado
 - ✅ **UI/UX** polida com loading states e error handling
 - ✅ **Arquitetura sólida** com TanStack Query e React Router
 
@@ -321,7 +342,8 @@ A migração está **COMPLETA E EXPANDIDA** com funcionalidades avançadas:
   - **Formulário Avançado**: título (min 5 chars), descrição (min 10 chars), autores, área, tipo, keywords
   - **Sistema de Tags**: Autores e palavras-chave com prevenção de duplicatas
   - **Validação em Tempo Real**: Contadores de caracteres e feedback visual
-  - **UX Inteligente**: Mensagens específicas para erros de validação
+  - **Mensagens Específicas**: Toasts detalhados para cada tipo de erro
+  - **UX Intuitiva**: Instruções claras e contadores em tempo real
   - Loading states durante upload com feedback visual
 - **AddDocumentButton**: Botão global na navbar (ícone +)
 - **AddDocumentProvider**: Context global para gerenciar modal
@@ -343,13 +365,37 @@ A migração está **COMPLETA E EXPANDIDA** com funcionalidades avançadas:
 - **DocumentCard**: 3 ações (Download/Preview/Detalhes) com preview funcional
 - **Blob URLs**: Documentos enviados geram URLs reais navegáveis
 
+#### **✏️ SISTEMA DE EDIÇÃO DE DOCUMENTOS**
+- **Modal Unificado**: AddDocumentModal adaptado para upload e edição
+  - **Detecção Automática**: Modal muda automaticamente entre modo upload/edição
+  - **Pré-preenchimento**: Formulário carregado com dados existentes do documento
+  - **Campo de Arquivo Read-only**: Mostra informações do arquivo atual (não editável)
+  - **Validação Adaptada**: Remove validação de arquivo obrigatório no modo edição
+  - **UI Contextual**: Título, descrição e botões mudam conforme o modo
+- **AddDocumentProvider Estendido**: Context gerencia tanto upload quanto edição
+  - **openEditModal()**: Nova função para abrir modal em modo edição
+  - **Estado editingDocument**: Documento sendo editado atualmente
+- **API updateDocument**: Função mock para atualizar metadados
+  - **Preserva arquivo original**: Apenas metadados são atualizados
+  - **Timestamp de atualização**: updatedAt é modificado automaticamente
+- **Controle de Permissões**: Sistema completo de verificação de acesso
+  - **Criador do documento**: Pode editar seus próprios documentos
+  - **Administradores**: Podem editar qualquer documento
+  - **Verificação dupla**: Frontend + API validam permissões
+- **Botões de Edição Estratégicos**:
+  - **DocumentCard**: Botão "Editar Documento" aparece condicionalmente
+  - **DocumentDetailPage**: Botão "Editar" na seção "Ações" da sidebar
+  - **DocumentManagement** (Admin): Botão funcional na lista administrativa
+- **Invalidação Inteligente de Queries**: Atualização automática em todas as listas
+  - Lista principal de documentos, admin, estatísticas e página individual
+
 ### **🔄 PRÓXIMAS MELHORIAS POSSÍVEIS:**
 1. ~~**Validação Avançada de Formulários**~~ ✅ **IMPLEMENTADO**
-2. **Google OAuth** - Substituir sistema mock por autenticação real  
-3. **Sistema de Favoritos** - Bookmarks de documentos para usuários
-4. **Analytics Avançados** - Relatórios detalhados de uso
-5. **Notificações** - Sistema de alertas para admins
-6. **Edição de Documentos** - Permitir modificar metadados de documentos existentes
+2. ~~**Edição de Documentos**~~ ✅ **IMPLEMENTADO**
+3. **Google OAuth** - Substituir sistema mock por autenticação real  
+4. **Sistema de Favoritos** - Bookmarks de documentos para usuários
+5. **Analytics Avançados** - Relatórios detalhados de uso
+6. **Notificações** - Sistema de alertas para admins
 
 ## 🔍 **Descobertas da Migração**
 
