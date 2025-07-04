@@ -34,7 +34,7 @@ export function DocumentDetailPage() {
   } = useDocument(id!);
 
   // Verificar se o usuário pode editar este documento
-  const canEdit = document && (user?.role === "ADMIN" || user?.id === document.createdBy.id);
+  const canEdit = document && (user?.role === "ADMIN" || user?.id === document.uploadedBy.id);
 
   const handleEdit = () => {
     if (document) {
@@ -281,18 +281,18 @@ export function DocumentDetailPage() {
               <CardContent>
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src={document.createdBy.image} />
+                    <AvatarImage src={document.uploadedBy.avatar} />
                     <AvatarFallback>
-                      {document.createdBy.name
+                      {document.uploadedBy.name
                         .split(" ")
                         .map((n) => n[0])
                         .join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <p className="font-medium">{document.createdBy.name}</p>
+                    <p className="font-medium">{document.uploadedBy.name}</p>
                     <p className="text-sm text-muted-foreground">
-                      {document.createdBy.email}
+                      {document.uploadedBy.email}
                     </p>
                   </div>
                 </div>

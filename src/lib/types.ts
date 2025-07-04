@@ -14,11 +14,11 @@ export interface Document {
   fileMimeType: string;
   viewCount: number;
   downloadCount: number;
-  createdBy: {
+  uploadedBy: {
     id: string;
     name: string;
     email: string;
-    image?: string;
+    avatar?: string;
   };
   createdAt: string;
   updatedAt: string;
