@@ -22,6 +22,7 @@ jobs:
         echo "🚀 Executando deploy no servidor..."
         sshpass -p "$PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no $USERNAME@$HOST "
           cd $DEPLOY_PATH
+          git fetch
           git pull
           
           # Criar .env
