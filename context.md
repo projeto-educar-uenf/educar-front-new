@@ -152,6 +152,16 @@ educar-new/ (Vite + React - DESTINO)
    - **Preservação de Arquivo**: Apenas metadados são editáveis
    - **Invalidação de Queries**: Atualização automática em todas as listas
 
+19. **✅ SISTEMA DE NOTIFICAÇÕES (REACT TOASTIFY) IMPLEMENTADO**:
+   - **React Toastify**: Biblioteca confiável substituindo useToast customizado
+   - **Configuração Completa**: ToastContainer integrado no main.tsx
+   - **Estilos Customizados**: Integração perfeita com design system do shadcn/ui
+   - **Posicionamento**: Toasts aparecem no canto inferior esquerdo
+   - **Funcionalidades**: Auto-close, drag & drop, pause on hover, progress bar
+   - **Tipos**: Success (verde), Error (vermelho), Info (azul), Warning (amarelo)
+   - **API Compatível**: useToast hook mantém mesma interface para compatibilidade
+   - **Instalação**: Dependência instalada via bun (react-toastify@11.0.5)
+
 ## 🛠 **DETALHES TÉCNICOS DA IMPLEMENTAÇÃO**
 
 ### **🔧 Arquitetura do Sistema de Upload**

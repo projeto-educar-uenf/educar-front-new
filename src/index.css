@@ -76,3 +76,48 @@
     min-height: 100vh;
   }
 }
+
+/* React Toastify Custom Styles */
+.Toastify__toast-container {
+  z-index: 9999;
+}
+
+.Toastify__toast {
+  @apply rounded-lg border shadow-lg;
+  background: hsl(var(--card));
+  color: hsl(var(--card-foreground));
+  border-color: hsl(var(--border));
+}
+
+.Toastify__toast--success {
+  background: hsl(142.1 76.2% 36.3%);
+  color: hsl(355.7 100% 97.3%);
+}
+
+.Toastify__toast--error {
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+
+.Toastify__toast--info {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.Toastify__toast--warning {
+  background: hsl(45.4 93.4% 47.5%);
+  color: hsl(26 83.3% 14.1%);
+}
+
+.Toastify__progress-bar {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.Toastify__close-button {
+  color: currentColor;
+  opacity: 0.7;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}

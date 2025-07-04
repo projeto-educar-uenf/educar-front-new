@@ -7,6 +7,7 @@ import { QueryParamProvider } from "use-query-params";
 import { ReactRouter6Adapter } from "use-query-params/adapters/react-router-6";
 import { ThemeProvider } from "./components/theme-provider";
 import { AuthProvider } from "./components/auth-provider";
+import { Toaster } from "./components/ui/toaster";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
           <BrowserRouter>
             <QueryParamProvider adapter={ReactRouter6Adapter}>
               <App />
+              <Toaster />
               <ReactQueryDevtools initialIsOpen={false} />
             </QueryParamProvider>
           </BrowserRouter>
