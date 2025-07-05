@@ -18,9 +18,10 @@ jobs:
         USERNAME: ${{ secrets.DEPLOY_USERNAME }}
         PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
       run: |
         echo "🚀 Executando deploy no servidor..."
-        sshpass -p "$PASSWORD" ssh -p 722 -o StrictHostKeyChecking=no $USERNAME@$HOST "
+        sshpass -p "$PASSWORD" ssh -p $DEPLOY_PORT -o StrictHostKeyChecking=no $USERNAME@$HOST "
           cd $DEPLOY_PATH
           git fetch
           git pull
