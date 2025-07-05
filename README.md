@@ -69,7 +69,7 @@ bun install
 3. Configure as variáveis de ambiente:
 
 ```bash
-cp .env.example .env.local
+cp .env.example .env
 ```
 
 4. Inicie o servidor de desenvolvimento:
